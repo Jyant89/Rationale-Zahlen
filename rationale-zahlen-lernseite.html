@@ -1,0 +1,1638 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Rationale Zahlen entdecken</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F2F5F7;
+  --surface:#FFFFFF;
+  --surface-2:#E9EFF3;
+  --ink:#13202A;
+  --muted:#52616C;
+  --line:#D3DCE3;
+  --line-strong:#9AA9B4;
+  --pos:#9A5B00; --pos-fill:#F0A81E; --pos-soft:#FFF2D6;
+  --neg:#1B59B5; --neg-fill:#3B7DDD; --neg-soft:#E0EBFA;
+  --zero:#13202A;
+  --p1:#0D7A72; --p1-soft:#DAF1EE;
+  --p2:#6A3DB3; --p2-soft:#ECE5F8;
+  --p3:#BF4A10; --p3-soft:#FBE8DC;
+  --p4:#1D7A38; --p4-soft:#DFF2E4;
+  --ok:#1D7A38; --ok-soft:#DFF2E4; --bad:#B42318; --bad-soft:#FCE7E5;
+  --lcd-bg:#13202A; --lcd-ink:#FFC857;
+  --earth:#CDBF9F; --earth-line:#A8997A;
+  --shadow:0 1px 2px rgba(19,32,42,.05), 0 6px 20px rgba(19,32,42,.06);
+  --display:"Lexend","Segoe UI",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0D1419; --surface:#141E26; --surface-2:#1B2731; --ink:#E3EAEF; --muted:#9CAAB4; --line:#283641; --line-strong:#4D5E6B;
+    --pos:#F3BA4B; --pos-fill:#E4A020; --pos-soft:#2F2610;
+    --neg:#86B4F7; --neg-fill:#4B89E6; --neg-soft:#122643;
+    --zero:#E3EAEF;
+    --p1:#43C6B9; --p1-soft:#0E2B29; --p2:#B79EF4; --p2-soft:#241B3B; --p3:#F5935B; --p3-soft:#351D11; --p4:#62CF83; --p4-soft:#11301B;
+    --ok:#62CF83; --ok-soft:#11301B; --bad:#F5857B; --bad-soft:#3A1715;
+    --lcd-bg:#05090C; --lcd-ink:#FFC857;
+    --earth:#4A4232; --earth-line:#6B604A;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0D1419; --surface:#141E26; --surface-2:#1B2731; --ink:#E3EAEF; --muted:#9CAAB4; --line:#283641; --line-strong:#4D5E6B;
+  --pos:#F3BA4B; --pos-fill:#E4A020; --pos-soft:#2F2610;
+  --neg:#86B4F7; --neg-fill:#4B89E6; --neg-soft:#122643;
+  --zero:#E3EAEF;
+  --p1:#43C6B9; --p1-soft:#0E2B29; --p2:#B79EF4; --p2-soft:#241B3B; --p3:#F5935B; --p3-soft:#351D11; --p4:#62CF83; --p4-soft:#11301B;
+  --ok:#62CF83; --ok-soft:#11301B; --bad:#F5857B; --bad-soft:#3A1715;
+  --lcd-bg:#05090C; --lcd-ink:#FFC857;
+  --earth:#4A4232; --earth-line:#6B604A;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:80px}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.55; -webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *,*::before,*::after{transition:none!important; animation:none!important} }
+h1,h2,h3,h4{font-family:var(--display); text-wrap:balance; margin:0}
+p{margin:0}
+a{color:inherit}
+button{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--p2); outline-offset:2px; border-radius:6px}
+.wrap{max-width:1120px; margin:0 auto; padding-inline:20px}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.numv{font-family:var(--display); font-variant-numeric:tabular-nums; font-weight:600}
+.is-pos{color:var(--pos)} .is-neg{color:var(--neg)} .is-zero{color:var(--ink)}
+svg text{fill:currentColor}
+
+/* Buttons */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:10px 18px; border-radius:10px; border:1.5px solid var(--ink); background:var(--ink); color:var(--surface); font:600 16px var(--display); cursor:pointer; text-decoration:none; white-space:nowrap}
+.btn:hover{filter:brightness(1.15)}
+.btn-ghost{background:transparent; color:var(--ink); border-color:var(--line-strong)}
+.btn-ghost:hover{background:var(--surface-2); filter:none}
+.btn-sm{min-height:38px; padding:6px 14px; font-size:14px}
+.btn[disabled]{opacity:.45; cursor:default}
+
+/* Top bar */
+.topbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter:saturate(1.3) blur(10px); -webkit-backdrop-filter:saturate(1.3) blur(10px); border-bottom:1px solid var(--line)}
+.topbar-in{display:flex; align-items:center; gap:14px; min-height:62px}
+.brand{display:flex; align-items:center; gap:10px; font:700 17px var(--display); text-decoration:none; white-space:nowrap}
+.brand-mark{display:inline-grid; grid-template-columns:1fr 1fr; width:30px; height:30px; border-radius:8px; overflow:hidden; border:1.5px solid var(--ink)}
+.brand-mark i{display:grid; place-items:center; font:700 15px/1 var(--display); font-style:normal}
+.brand-mark i:first-child{background:var(--neg-soft); color:var(--neg)}
+.brand-mark i:last-child{background:var(--pos-soft); color:var(--pos)}
+.phases{display:flex; gap:4px; flex:1; justify-content:center; overflow-x:auto; scrollbar-width:none}
+.phases::-webkit-scrollbar{display:none}
+.ph{display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:999px; text-decoration:none; color:var(--muted); font:600 14px var(--display); white-space:nowrap; border:1.5px solid transparent}
+.ph-dot{width:9px; height:9px; border-radius:50%; background:var(--c); flex:none}
+.ph:hover{color:var(--ink)}
+.ph.active{background:var(--c-soft); color:var(--c); border-color:var(--c)}
+.c1{--c:var(--p1); --c-soft:var(--p1-soft)}
+.c2{--c:var(--p2); --c-soft:var(--p2-soft)}
+.c3{--c:var(--p3); --c-soft:var(--p3-soft)}
+.c4{--c:var(--p4); --c-soft:var(--p4-soft)}
+.words-open{flex:none}
+@media (max-width:760px){
+  .brand-text{display:none}
+  .ph{padding:6px 10px; font-size:13px; gap:6px}
+  .words-open .wo-long{display:none}
+  .topbar-in{gap:8px}
+}
+@media (min-width:761px){ .words-open .wo-short{display:none} }
+
+/* Phase sections */
+.phase{padding-block:56px 16px}
+.phase-head{display:grid; gap:10px; margin-bottom:28px; max-width:760px}
+.phase-tag{display:inline-flex; width:max-content; align-items:center; gap:8px; font:600 13px var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--c); background:var(--c-soft); padding:5px 12px; border-radius:6px}
+.phase h2{font-weight:700; font-size:clamp(28px,4vw,38px); line-height:1.15; letter-spacing:-.015em}
+.phase-intro{color:var(--muted); font-size:18px; max-width:62ch}
+
+/* Hero */
+.hero{position:relative; margin-top:24px; border-radius:20px; overflow:hidden; display:grid; grid-template-rows:1fr 1fr; border:1px solid var(--line)}
+.hero-up{background:var(--pos-soft); padding:48px 104px 34px 32px; display:flex; flex-direction:column; justify-content:flex-end; gap:12px}
+.hero-down{background:var(--neg-soft); padding:34px 104px 40px 32px; display:flex; flex-direction:column; gap:20px}
+.hero .eyebrow{font:600 13px var(--display); letter-spacing:.1em; text-transform:uppercase; color:var(--pos)}
+.hero h1{font-weight:700; font-size:clamp(38px,6.4vw,68px); line-height:1.02; letter-spacing:-.03em}
+.hero-lead{font-size:19px; max-width:52ch}
+.hero-actions{display:flex; flex-wrap:wrap; gap:10px}
+.hero-zero{position:absolute; left:0; right:0; top:50%; height:3px; margin-top:-1.5px; background:var(--zero); pointer-events:none}
+.hero-zero span{position:absolute; left:32px; top:50%; transform:translateY(-50%); background:var(--zero); color:var(--bg); font:700 15px var(--display); padding:2px 12px; border-radius:999px}
+.hero-scale{position:absolute; right:0; top:0; bottom:0; width:76px; border-left:1.5px solid color-mix(in srgb, var(--ink) 25%, transparent); pointer-events:none}
+.hero-scale .tk{position:absolute; left:0; display:flex; align-items:center; gap:8px; transform:translateY(-50%); font:600 15px var(--display); font-variant-numeric:tabular-nums}
+.hero-scale .tk::before{content:""; width:14px; height:2px; background:currentColor}
+@media (max-width:600px){
+  .hero-up{padding:36px 64px 28px 20px}
+  .hero-down{padding:28px 64px 32px 20px}
+  .hero-scale{width:52px}
+  .hero-scale .tk{font-size:13px; gap:5px}
+  .hero-scale .tk::before{width:9px}
+  .hero-zero span{left:20px}
+  .hero-lead{font-size:17px}
+}
+
+/* Einstieg situations */
+.task-note{display:flex; gap:12px; align-items:flex-start; background:var(--p1-soft); border:1.5px solid var(--p1); border-radius:12px; padding:14px 16px; margin-bottom:20px; max-width:760px}
+.task-note b{color:var(--p1); font-family:var(--display)}
+.situs{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px}
+.situ{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow)}
+.situ-ctx{font:600 13px var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.situ-show{min-height:104px; border-radius:12px; background:var(--surface-2); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:12px}
+.situ-small{font-size:14px; color:var(--muted)}
+.situ-big{font:700 38px/1.1 var(--display); font-variant-numeric:tabular-nums}
+.lcd{display:inline-flex; align-items:center; justify-content:center; min-width:96px; padding:6px 16px; background:var(--lcd-bg); color:var(--lcd-ink); border-radius:8px; font:600 40px/1.1 var(--display); font-variant-numeric:tabular-nums; letter-spacing:.04em; box-shadow:inset 0 0 0 2px rgba(255,255,255,.06)}
+.situ-btn{align-self:flex-start; background:none; border:1.5px solid var(--p1); color:var(--p1); border-radius:999px; padding:7px 14px; font:600 14px var(--display); cursor:pointer; min-height:40px}
+.situ-btn[aria-expanded="true"]{background:var(--p1); color:var(--surface)}
+.situ-ans{font-size:16px; border-top:1px dashed var(--line); padding-top:10px}
+
+/* Model index */
+.model-index{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-bottom:28px}
+.mi{display:flex; flex-direction:column; gap:2px; padding:12px 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--surface); text-decoration:none}
+.mi:hover{border-color:var(--p2)}
+.mi-no{font:600 12px var(--display); color:var(--p2); letter-spacing:.08em; text-transform:uppercase}
+.mi-name{font:600 17px var(--display)}
+.mi-sub{font-size:14px; color:var(--muted)}
+
+/* Stations */
+.stations{display:grid; gap:28px}
+.station{background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:28px; display:grid; gap:24px; box-shadow:var(--shadow)}
+.st-head{display:grid; gap:6px; max-width:70ch}
+.st-no{font:600 13px var(--display); color:var(--p2); letter-spacing:.08em; text-transform:uppercase}
+.st-head h3{font-weight:700; font-size:clamp(24px,3vw,30px); line-height:1.15; letter-spacing:-.01em}
+.st-lead{color:var(--muted); font-size:18px}
+.st-body{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:28px; align-items:start}
+@media (max-width:880px){ .st-body{grid-template-columns:1fr} }
+.st-text{display:grid; gap:16px}
+.st-text ul{margin:0; padding-left:1.15em; display:grid; gap:8px}
+.st-text li::marker{color:var(--p2)}
+.merke{border:1.5px solid var(--p4); border-radius:12px; padding:12px 16px 14px; background:var(--p4-soft)}
+.box-lbl{display:block; font:700 12px var(--display); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px}
+.merke .box-lbl{color:var(--p4)}
+.fact{border:1.5px dashed var(--line-strong); border-radius:12px; padding:12px 16px 14px}
+.fact .box-lbl{color:var(--muted)}
+.lab{background:var(--surface-2); border-radius:16px; padding:20px; display:grid; gap:16px; min-width:0}
+.lab-hint{font-size:15px; color:var(--muted)}
+.readout{font:700 44px/1.05 var(--display); font-variant-numeric:tabular-nums; letter-spacing:-.01em}
+.say{font-size:17px}
+.btn-row{display:flex; flex-wrap:wrap; gap:8px}
+
+/* Challenge */
+.challenge{border-radius:14px; background:var(--p2-soft); border:1.5px solid color-mix(in srgb, var(--p2) 45%, transparent); padding:14px 16px; display:grid; gap:8px}
+.ch-top{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+.ch-count{font:700 12px var(--display); letter-spacing:.1em; text-transform:uppercase; color:var(--p2)}
+.ch-next{background:var(--surface); border:1.5px solid var(--p2); color:var(--p2); border-radius:999px; padding:5px 14px; font:600 14px var(--display); cursor:pointer; min-height:36px}
+.ch-text{font-size:18px; font-weight:700}
+.ch-status{font-size:16px; color:var(--muted)}
+.ch-status.ok{color:var(--ok)}
+.ch-status.bad{color:var(--bad)}
+.ch-form{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+
+/* Inputs */
+.num-in{display:inline-flex; align-items:center; gap:6px}
+.num-in input{width:9.5em; min-height:44px; padding:8px 12px; border-radius:10px; border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink); font:600 18px var(--display); font-variant-numeric:tabular-nums}
+.num-in input:focus{outline:3px solid var(--p2); outline-offset:1px; border-color:var(--p2)}
+.unit{font:600 16px var(--display); color:var(--muted)}
+.sign-btn{min-width:44px; min-height:44px; border-radius:10px; border:1.5px solid var(--line-strong); background:var(--surface); font:700 18px var(--display); cursor:pointer}
+.sign-btn:hover{background:var(--surface-2)}
+
+/* Thermometer */
+.thermo-lab{display:grid; grid-template-columns:170px minmax(0,1fr); gap:20px; align-items:center}
+#thermo-svg{width:170px; height:auto; touch-action:none; cursor:ns-resize; display:block}
+.th-lbl{font:600 14px var(--display)}
+.th-small{font:500 10px var(--body); fill:var(--muted)!important}
+.range{width:100%; accent-color:var(--p2)}
+@media (max-width:560px){ .thermo-lab{grid-template-columns:1fr; justify-items:center; gap:14px} .thermo-lab > div{width:100%} #thermo-svg{width:150px} .readout{font-size:38px} }
+@media (max-width:600px){ .wrap{padding-inline:16px} .station{padding:20px 16px; border-radius:16px} .lab{padding:14px} .kipp{padding:12px} }
+
+/* Elevator */
+.lift-lab{display:grid; grid-template-columns:minmax(0,1fr) 170px; gap:18px; align-items:start}
+@media (max-width:560px){
+  .lift-lab{grid-template-columns:1fr; gap:12px}
+  .lift-panel{grid-template-columns:auto 1fr; align-items:center; justify-items:start}
+  .ground span{display:none}
+}
+.building{position:relative; border:2px solid var(--ink); border-radius:10px 10px 4px 4px; overflow:hidden; background:var(--surface)}
+.floors{margin-right:66px}
+.fl{height:44px; display:flex; align-items:center; gap:10px; padding:0 10px; border-bottom:1px solid var(--line); font-size:15px}
+.fl.under{background:repeating-linear-gradient(135deg, var(--neg-soft) 0 10px, color-mix(in srgb, var(--neg-soft) 70%, var(--surface)) 10px 20px)}
+.fl.here{box-shadow:inset 4px 0 0 var(--p2); font-weight:700}
+.fl-num{font:700 17px var(--display); min-width:2.2em; font-variant-numeric:tabular-nums}
+.fl-name{color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.shaft{position:absolute; right:0; top:0; bottom:0; width:66px; border-left:2px solid var(--ink); background:var(--surface-2)}
+.car{position:absolute; left:8px; right:8px; top:4px; height:36px; border:2px solid var(--ink); border-radius:5px; background:var(--surface); display:grid; grid-template-columns:1fr 1fr; transition-property:transform; transition-timing-function:linear}
+.car i{border-right:1.5px solid var(--ink)} .car i:last-child{border:0}
+.ground{position:absolute; left:0; right:0; height:4px; margin-top:-2px; background:var(--zero); z-index:2}
+.ground span{position:absolute; right:72px; top:4px; font:600 11px var(--display); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); background:var(--surface); padding:0 4px; border-radius:3px}
+.lift-panel{background:var(--surface); border:1.5px solid var(--line-strong); border-radius:14px; padding:12px; display:grid; gap:12px; justify-items:center}
+.lift-lcd{display:flex; align-items:center; gap:6px; background:var(--lcd-bg); color:var(--lcd-ink); border-radius:8px; padding:6px 12px; font:600 34px/1.1 var(--display); font-variant-numeric:tabular-nums; min-width:112px; justify-content:center}
+.lift-arrow{font-size:16px; width:14px; text-align:center}
+.lift-btns{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+.lift-btn{width:42px; height:42px; border-radius:50%; border:2px solid var(--line-strong); background:var(--surface-2); font:700 15px var(--display); cursor:pointer; font-variant-numeric:tabular-nums}
+.lift-btn:hover{border-color:var(--ink)}
+.lift-btn.lit{border-color:var(--lcd-ink); box-shadow:0 0 0 3px color-mix(in srgb, var(--lcd-ink) 45%, transparent)}
+.lift-btn.neg{color:var(--neg)} .lift-btn.pos{color:var(--pos)}
+@media (max-width:560px){ .lift-lcd{font-size:28px; min-width:88px} .fl-name{font-size:14px} }
+.lift-log{font-size:16px; min-height:3.2em}
+.calc{font:500 15px var(--display); color:var(--muted); font-variant-numeric:tabular-nums}
+
+/* Bank */
+.bank{background:var(--surface); border:1.5px solid var(--line-strong); border-radius:16px; padding:16px; display:grid; gap:12px}
+.bank-top{display:flex; justify-content:space-between; align-items:center; gap:8px; font:600 15px var(--display); color:var(--muted)}
+.pill{display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font:600 13px var(--display)}
+.pill.pos{background:var(--pos-soft); color:var(--pos)} .pill.neg{background:var(--neg-soft); color:var(--neg)} .pill.zero{background:var(--surface-2); color:var(--ink)}
+.bank-bal{font:700 42px/1.05 var(--display); font-variant-numeric:tabular-nums}
+#konto-bar{width:100%; height:auto; display:block}
+.bank-btns{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+.book{display:flex; flex-direction:column; align-items:flex-start; gap:0; padding:8px 12px; border-radius:10px; border:1.5px solid var(--line-strong); background:var(--surface); cursor:pointer; text-align:left; min-height:52px}
+.book b{font:700 16px var(--display); font-variant-numeric:tabular-nums}
+.book span{font-size:14px; color:var(--muted)}
+.book.in b{color:var(--pos)} .book.out b{color:var(--neg)}
+.book:hover{background:var(--surface-2)}
+.table-wrap{overflow-x:auto}
+.auszug{width:100%; border-collapse:collapse; font-size:15px}
+.auszug caption{text-align:left; font:600 13px var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding-bottom:6px}
+.auszug th{text-align:left; font:600 13px var(--display); color:var(--muted); border-bottom:1.5px solid var(--line-strong); padding:6px 8px}
+.auszug td{padding:6px 8px; border-bottom:1px solid var(--line)}
+.auszug td.n, .auszug th.n{text-align:right; font-variant-numeric:tabular-nums; font-family:var(--display); white-space:nowrap}
+
+/* Sea */
+#sea-svg{width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--line)}
+.sea-obj{cursor:pointer}
+.sea-obj:focus{outline:none}
+.sea-obj:focus-visible .hit{stroke:var(--p2); stroke-width:3}
+.obj-btns{display:flex; flex-wrap:wrap; gap:6px}
+.obj-btn{border:1.5px solid var(--line-strong); background:var(--surface); border-radius:999px; padding:6px 12px; font:600 14px var(--display); cursor:pointer; min-height:38px}
+.obj-btn[aria-pressed="true"]{background:var(--ink); color:var(--surface); border-color:var(--ink)}
+.sea-info{font-size:17px; min-height:1.6em}
+
+/* Chips */
+.chip-board{background:var(--surface); border:1.5px solid var(--line-strong); border-radius:14px; padding:14px; min-height:140px; display:grid; gap:12px; align-content:start}
+.pairs, .rest{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+.pair{display:flex; align-items:center; gap:4px; padding:5px 8px 5px 5px; border:1.5px dashed var(--line-strong); border-radius:999px; transition:opacity .3s, transform .3s}
+.pair.gone{opacity:0; transform:scale(.6)}
+.pair-lbl{font:600 13px var(--display); color:var(--muted); margin-left:2px}
+.chip{width:42px; height:42px; border-radius:50%; font:700 22px/1 var(--display); border:2.5px solid; cursor:pointer; display:grid; place-items:center; padding:0}
+.chip.plus{background:var(--pos-soft); color:var(--pos); border-color:var(--pos-fill)}
+.chip.minus{background:var(--neg-soft); color:var(--neg); border-color:var(--neg-fill)}
+.chip:hover{transform:translateY(-2px)}
+.board-lbl{font:600 12px var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.chip-sum{font-size:17px}
+
+/* Number line */
+.kipp{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:center; background:var(--surface-2); border-radius:16px; padding:16px}
+@media (max-width:640px){ .kipp{grid-template-columns:1fr; justify-items:center; text-align:center} }
+#kipp-svg{width:100%; max-width:300px; height:auto; display:block}
+.kipp-cap{font-size:18px; font-weight:700; font-family:var(--display)}
+.kipp-text{display:grid; gap:12px; justify-items:start}
+@media (max-width:640px){ .kipp-text{justify-items:center} }
+.nl-wrap{background:var(--surface); border:1.5px solid var(--line-strong); border-radius:14px; padding:8px 4px}
+#nl-svg{width:100%; height:auto; display:block; touch-action:none; cursor:pointer}
+.nl-pin{cursor:grab}
+.nl-pin:focus{outline:none}
+.nl-pin:focus-visible circle.head{stroke:var(--p2); stroke-width:4}
+.toggles{display:flex; flex-wrap:wrap; gap:8px 16px}
+.toggles label{display:inline-flex; align-items:center; gap:8px; font-size:16px; cursor:pointer; min-height:36px}
+.toggles input{width:20px; height:20px; accent-color:var(--p2)}
+.nl-read{display:grid; gap:6px; font-size:17px}
+.nl-read .k{font:600 13px var(--display); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-right:6px}
+
+/* Exercises */
+.levels{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px}
+.lvl{display:flex; align-items:center; gap:10px; padding:10px 16px; border-radius:12px; border:1.5px solid var(--line-strong); background:var(--surface); cursor:pointer; font:600 16px var(--display); min-height:48px}
+.lvl[aria-selected="true"]{border-color:var(--p3); background:var(--p3-soft); color:var(--p3)}
+.dots{display:inline-flex; gap:3px}
+.dots i{width:10px; height:10px; border-radius:50%; border:2px solid currentColor}
+.dots i.f{background:currentColor}
+.level-desc{color:var(--muted); margin-bottom:12px; max-width:70ch}
+.progress{display:flex; align-items:center; gap:12px; margin-bottom:20px}
+.pbar{flex:1; max-width:360px; height:10px; border-radius:999px; background:var(--surface-2); overflow:hidden; border:1px solid var(--line)}
+.pbar span{display:block; height:100%; width:0; background:var(--p3); transition:width .4s}
+.ptext{font:600 15px var(--display); color:var(--muted); font-variant-numeric:tabular-nums}
+.tasks{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr)); gap:16px}
+.task{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow)}
+.task.solved{border-color:var(--ok)}
+.task-head{display:flex; justify-content:space-between; align-items:center; gap:8px}
+.task-no{font:700 13px var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--p3)}
+.task-state{font:600 13px var(--display); color:var(--ok)}
+.task-q{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+.task-q p{font-size:18px; flex:1; min-width:200px}
+.q-viz svg{display:block}
+.big-inline{font:700 24px var(--display); white-space:nowrap}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opt{min-height:46px; padding:8px 16px; border-radius:10px; border:1.5px solid var(--line-strong); background:var(--surface); font:600 18px var(--display); cursor:pointer; font-variant-numeric:tabular-nums}
+.opt[aria-pressed="true"]{border-color:var(--p3); background:var(--p3-soft); color:var(--p3)}
+.task-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:auto}
+.btn-hint{background:none; border:1.5px dashed var(--line-strong); border-radius:10px; padding:8px 14px; font:600 15px var(--display); cursor:pointer; min-height:44px; color:var(--muted)}
+.btn-hint[aria-expanded="true"]{border-style:solid; color:var(--ink)}
+.hint{background:var(--pos-soft); border:1.5px solid color-mix(in srgb, var(--pos-fill) 60%, transparent); border-radius:10px; padding:10px 14px; font-size:16px}
+.hint .box-lbl{color:var(--pos)}
+.fb{font-size:16px; min-height:0}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+.order-pool, .order-ans{display:flex; flex-wrap:wrap; gap:8px; min-height:50px; align-items:center}
+.order-ans{border:1.5px dashed var(--line-strong); border-radius:10px; padding:6px 8px}
+.order-ans:empty::before{content:"Tippe die Zahlen an. Sie erscheinen hier."; font-size:14px; color:var(--muted)}
+.ochip{min-height:44px; min-width:52px; padding:6px 12px; border-radius:10px; border:1.5px solid var(--line-strong); background:var(--surface-2); font:700 18px var(--display); cursor:pointer; font-variant-numeric:tabular-nums}
+.lt{font:700 18px var(--display); color:var(--muted)}
+
+/* Sicherung */
+.merk-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:14px}
+.merk-card{background:var(--surface); border:1.5px solid var(--p4); border-radius:14px; padding:16px; display:grid; gap:6px; align-content:start}
+.merk-card h3{font-size:19px; font-weight:700}
+.merk-card .ex{font:600 18px var(--display); font-variant-numeric:tabular-nums}
+.sub-h{font:700 22px var(--display); margin:36px 0 14px}
+.cmp-table{width:100%; border-collapse:collapse; background:var(--surface); border-radius:14px; overflow:hidden; font-size:16px; min-width:680px}
+.cmp-table th, .cmp-table td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+.cmp-table thead th{font:600 13px var(--display); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); background:var(--surface-2)}
+.cmp-table tbody th{font:600 16px var(--display)}
+.cmp-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px}
+.sets{display:grid; gap:0; max-width:760px}
+.set{border:2px solid var(--ink); border-radius:18px; padding:14px 16px 16px; display:grid; gap:8px}
+.set.q{background:var(--surface)}
+.set.z{background:var(--surface-2); border-color:var(--p2)}
+.set.n{background:var(--surface); border-color:var(--p1)}
+.set-name{font:700 17px var(--display)}
+.set-ex{font:500 16px var(--display); font-variant-numeric:tabular-nums; color:var(--muted)}
+.set-sym{font:700 14px var(--display); padding:2px 8px; border-radius:6px; background:var(--surface-2); margin-left:6px}
+.cans{list-style:none; margin:0; padding:0; display:grid; gap:10px; max-width:860px}
+.can{display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px}
+.can p{flex:1; min-width:220px}
+.can-btns{display:flex; gap:6px; flex-wrap:wrap}
+.can-btn{border:1.5px solid var(--line-strong); background:var(--surface); border-radius:999px; padding:5px 12px; font:600 14px var(--display); cursor:pointer; min-height:36px}
+.can-btn.yes[aria-pressed="true"]{background:var(--ok-soft); border-color:var(--ok); color:var(--ok)}
+.can-btn.no[aria-pressed="true"]{background:var(--p3-soft); border-color:var(--p3); color:var(--p3)}
+.can a.back{font:600 14px var(--display); color:var(--p2)}
+.can a.back[hidden]{display:none}
+
+/* Teacher */
+.teacher{margin-top:40px; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:4px 18px}
+.teacher summary{cursor:pointer; font:600 16px var(--display); padding:12px 0; min-height:44px}
+.teacher ul{margin:0 0 16px; padding-left:1.2em; display:grid; gap:8px; max-width:80ch}
+footer{padding-block:40px; color:var(--muted); font-size:15px}
+
+/* Account + login */
+.me{flex:none; display:inline-flex; align-items:center; gap:8px; max-width:190px; min-height:38px; padding:5px 12px 5px 6px; border-radius:999px; border:1.5px solid var(--line-strong); background:var(--surface); font:600 14px var(--display); text-decoration:none; color:var(--ink)}
+.me:hover{border-color:var(--ink)}
+.me-av{width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--p4-soft); color:var(--p4); font:700 13px var(--display); flex:none}
+.me-name{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+@media (max-width:760px){ .me{padding:4px; } .me-name{display:none} }
+.login-bd{position:fixed; inset:0; z-index:50; background:color-mix(in srgb, var(--bg) 70%, rgba(8,14,19,.55)); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:grid; place-items:center; padding:20px; overflow-y:auto}
+.login-card{width:min(440px,100%); background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:28px 24px; display:grid; gap:14px; box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.login-card h2{font-size:28px; letter-spacing:-.01em}
+.login-card label{font:600 15px var(--display)}
+.login-card input{width:100%; min-height:50px; padding:10px 14px; border-radius:12px; border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink); font:600 20px var(--display)}
+.login-card input:focus{outline:3px solid var(--p2); outline-offset:1px; border-color:var(--p2)}
+.login-err{color:var(--bad); font-size:15px; min-height:1.2em}
+.login-note{font-size:14px; color:var(--muted)}
+.mi-prog{margin-top:4px; font:600 12px var(--display); color:var(--muted); font-variant-numeric:tabular-nums}
+.mi-prog.done{color:var(--ok)}
+
+/* Fahrplan */
+.plan{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:20px}
+@media (max-width:760px){ .plan{grid-template-columns:1fr} }
+.plan-col{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px 16px 6px; box-shadow:var(--shadow)}
+.plan-col h3{font-size:17px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:4px}
+.plan-col h3 span{font:600 13px var(--display); color:var(--muted)}
+.step{display:grid; grid-template-columns:28px minmax(0,1fr) auto; gap:4px 10px; align-items:start; padding:10px 0; border-top:1px solid var(--line); text-decoration:none; color:var(--ink)}
+.step:hover .step-t{text-decoration:underline; text-underline-offset:3px}
+.step-ic{width:24px; height:24px; border-radius:50%; border:2px solid var(--line-strong); display:grid; place-items:center; font:700 13px var(--display); margin-top:1px}
+.step.part .step-ic{border-color:var(--p2); background:linear-gradient(90deg,var(--p2) 50%, transparent 50%)}
+.step.done .step-ic{border-color:var(--ok); background:var(--ok); color:var(--surface)}
+.step-t{font:600 16px var(--display)}
+.step-s{grid-column:2; font-size:14px; color:var(--muted)}
+.step-min{font:600 13px var(--display); color:var(--muted); background:var(--surface-2); padding:2px 8px; border-radius:999px; white-space:nowrap}
+.step.next{background:linear-gradient(90deg, var(--p2-soft), transparent); border-radius:10px; margin-inline:-8px; padding-inline:8px}
+.nudge{display:flex; flex-wrap:wrap; gap:10px; align-items:center; background:var(--ok-soft); color:var(--ok); border-radius:12px; padding:10px 14px; margin-bottom:16px; font:600 16px var(--display)}
+.heft-tag{justify-self:start; font:700 11px var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--surface); background:var(--p4); padding:2px 8px; border-radius:6px}
+
+/* Result card */
+.result{background:var(--surface); border:2px solid var(--ink); border-radius:18px; padding:22px; display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:22px; max-width:900px}
+@media (max-width:720px){ .result{grid-template-columns:1fr; padding:18px} }
+.rc-lbl{font:700 12px var(--display); letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.rc-name{font:700 24px var(--display); margin-bottom:10px}
+.rc-code{font:700 clamp(28px,5.4vw,44px)/1.1 "JetBrains Mono",ui-monospace,Consolas,monospace; letter-spacing:.06em; padding:12px 14px; border-radius:12px; background:var(--surface-2); border:1.5px dashed var(--line-strong); word-break:break-all}
+.rc-code.empty{color:var(--muted)}
+.rc-stats{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.rc-stats li{display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid var(--line); padding-bottom:6px; font-size:16px}
+.rc-stats b{font-family:var(--display); font-variant-numeric:tabular-nums}
+.rc-steps{grid-column:1/-1; margin:0; padding-left:1.3em; display:grid; gap:6px}
+.rc-foot{grid-column:1/-1; display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+.rc-warn{grid-column:1/-1; background:var(--bad-soft); color:var(--bad); border-radius:10px; padding:10px 14px; font-size:15px}
+.confirm{display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:15px}
+
+/* Word panel */
+.words-bd{position:fixed; inset:0; background:rgba(8,14,19,.45); z-index:40}
+.words{position:fixed; top:0; right:0; bottom:0; width:min(440px,100%); background:var(--surface); z-index:41; border-left:1px solid var(--line); display:flex; flex-direction:column; padding:calc(env(safe-area-inset-top,0px) + 16px) 20px calc(env(safe-area-inset-bottom,0px) + 16px); box-shadow:-10px 0 40px rgba(0,0,0,.2)}
+.words-head{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:6px}
+.words-head h2{font-size:24px}
+.icon-btn{width:44px; height:44px; border-radius:10px; border:1.5px solid var(--line-strong); background:var(--surface); font:600 24px/1 var(--display); cursor:pointer}
+.words-intro{color:var(--muted); margin-bottom:12px}
+.wl{margin:0; overflow-y:auto; display:grid; gap:0; padding-right:4px}
+.wl div{padding:10px 0; border-bottom:1px solid var(--line)}
+.wl dt{font:700 17px var(--display)}
+.wl dd{margin:2px 0 0; font-size:16px}
+</style>
+</head>
+<body>
+<header class="topbar" id="top">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#einstieg"><span class="brand-mark" aria-hidden="true"><i>−</i><i>+</i></span><span class="brand-text">Rationale Zahlen</span></a>
+    <nav class="phases" aria-label="Abschnitte">
+      <a class="ph c1" href="#einstieg"><span class="ph-dot"></span>1 Einstieg</a>
+      <a class="ph c2" href="#modelle"><span class="ph-dot"></span>2 Modelle</a>
+      <a class="ph c3" href="#ueben"><span class="ph-dot"></span>3 Üben</a>
+      <a class="ph c4" href="#merken"><span class="ph-dot"></span>4 Merken</a>
+    </nav>
+    <button class="btn btn-ghost btn-sm words-open" type="button" id="words-open" aria-haspopup="dialog"><span class="wo-long">Wortspeicher</span><span class="wo-short">Wörter</span></button>
+    <a class="me" href="#ergebnis" id="me" hidden aria-label="Mein Ergebnis-Code"><span class="me-av" id="me-av" aria-hidden="true"></span><span class="me-name" id="me-name"></span></a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ 1 EINSTIEG ============ -->
+<section id="einstieg" class="phase c1" style="padding-top:8px">
+  <div class="hero">
+    <div class="hero-up">
+      <p class="eyebrow">Mathematik · Klasse 7 · Einführung</p>
+      <h1>Unter null geht es weiter.</h1>
+    </div>
+    <div class="hero-down">
+      <p class="hero-lead">Bei Temperaturen, Stockwerken und Kontoständen brauchst du oft Zahlen kleiner als 0. Du lernst sie in zwei Schulstunden mit sechs Modellen kennen. Probiere alles aus.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#fahrplan">Zum Fahrplan</a>
+        <button class="btn btn-ghost" type="button" id="words-open-2">Wortspeicher öffnen</button>
+      </div>
+    </div>
+    <div class="hero-zero" aria-hidden="true"><span>0</span></div>
+    <div class="hero-scale" aria-hidden="true">
+      <span class="tk is-pos" style="top:calc(50% - 3*12.5%)">+3</span>
+      <span class="tk is-pos" style="top:calc(50% - 2*12.5%)">+2</span>
+      <span class="tk is-pos" style="top:calc(50% - 1*12.5%)">+1</span>
+      <span class="tk is-neg" style="top:calc(50% + 1*12.5%)">−1</span>
+      <span class="tk is-neg" style="top:calc(50% + 2*12.5%)">−2</span>
+      <span class="tk is-neg" style="top:calc(50% + 3*12.5%)">−3</span>
+    </div>
+  </div>
+
+  <div id="fahrplan" style="margin-top:40px">
+    <div class="phase-head" style="margin-bottom:0">
+      <h2>Dein Fahrplan für zwei Schulstunden</h2>
+      <p class="phase-intro">Arbeite die Schritte der Reihe nach ab. Die Häkchen setzt die Seite selbst. Am Ende schreibst du deinen Code auf.</p>
+    </div>
+    <div class="plan" id="plan"></div>
+  </div>
+
+  <div class="phase-head" id="situationen" style="margin-top:48px">
+    <span class="phase-tag">1 · Einstieg · 5 Minuten</span>
+    <h2>Wo siehst du Zahlen mit Minus?</h2>
+    <p class="phase-intro">Hier sind vier Situationen aus dem Alltag. In jeder steht eine Zahl mit Minus.</p>
+  </div>
+  <div class="task-note"><b>Auftrag</b><span>Überlege zuerst allein: Was bedeutet das Minus hier? Sprich dann mit deinem Partner. Tippe danach auf „Was bedeutet das?“.</span></div>
+
+  <div class="situs">
+    <article class="situ">
+      <p class="situ-ctx">Wetterbericht</p>
+      <div class="situ-show"><span class="situ-small">Heute Nacht</span><span class="situ-big is-neg">−5 °C</span></div>
+      <button class="situ-btn" type="button" aria-expanded="false" aria-controls="s-a1">Was bedeutet das?</button>
+      <p class="situ-ans" id="s-a1" hidden>Es ist 5 Grad kälter als 0 °C. Es friert.</p>
+    </article>
+    <article class="situ">
+      <p class="situ-ctx">Fahrstuhl</p>
+      <div class="situ-show"><span class="lcd">−1</span></div>
+      <button class="situ-btn" type="button" aria-expanded="false" aria-controls="s-a2">Was bedeutet das?</button>
+      <p class="situ-ans" id="s-a2" hidden>Der Fahrstuhl ist 1 Stockwerk unter dem Erdgeschoss. Er ist im Keller.</p>
+    </article>
+    <article class="situ">
+      <p class="situ-ctx">Kontoauszug</p>
+      <div class="situ-show"><span class="situ-small">Kontostand</span><span class="situ-big is-neg">−20,00 €</span></div>
+      <button class="situ-btn" type="button" aria-expanded="false" aria-controls="s-a3">Was bedeutet das?</button>
+      <p class="situ-ans" id="s-a3" hidden>Auf dem Konto fehlen 20 €. Das sind Schulden.</p>
+    </article>
+    <article class="situ">
+      <p class="situ-ctx">Fußball-Tabelle</p>
+      <div class="situ-show"><span class="situ-small">Tore 12 : 15 · Tordifferenz</span><span class="situ-big is-neg">−3</span></div>
+      <button class="situ-btn" type="button" aria-expanded="false" aria-controls="s-a4">Was bedeutet das?</button>
+      <p class="situ-ans" id="s-a4" hidden>Die Mannschaft hat 3 Tore mehr bekommen als selbst geschossen.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 2 ERARBEITUNG ============ -->
+<section id="modelle" class="phase c2">
+  <div class="phase-head">
+    <span class="phase-tag">2 · Erarbeitung · 55 Minuten</span>
+    <h2>Sechs Modelle für Zahlen unter null</h2>
+    <p class="phase-intro">Jedes Modell zeigt dieselbe Idee: Es gibt eine 0. Darüber oder rechts davon sind positive Zahlen. Darunter oder links davon sind negative Zahlen. In der 1. Stunde schaffst du die Modelle 1–4, in der 2. Stunde die Modelle 5 und 6. Zu jedem Modell gibt es drei Mini-Aufgaben.</p>
+  </div>
+
+  <nav class="model-index" aria-label="Modelle">
+    <a class="mi" href="#thermometer"><span class="mi-no">Modell 1</span><span class="mi-name">Thermometer</span><span class="mi-sub">Temperatur</span><span class="mi-prog" data-mk="thermo"></span></a>
+    <a class="mi" href="#fahrstuhl"><span class="mi-no">Modell 2</span><span class="mi-name">Fahrstuhl</span><span class="mi-sub">Stockwerke</span><span class="mi-prog" data-mk="lift"></span></a>
+    <a class="mi" href="#konto"><span class="mi-no">Modell 3</span><span class="mi-name">Konto</span><span class="mi-sub">Guthaben und Schulden</span><span class="mi-prog" data-mk="konto"></span></a>
+    <a class="mi" href="#meer"><span class="mi-no">Modell 4</span><span class="mi-name">Meeresspiegel</span><span class="mi-sub">Höhe und Tiefe</span><span class="mi-prog" data-mk="sea"></span></a>
+    <a class="mi" href="#plaettchen"><span class="mi-no">Modell 5</span><span class="mi-name">Plättchen</span><span class="mi-sub">Plus und Minus legen</span><span class="mi-prog" data-mk="chips"></span></a>
+    <a class="mi" href="#zahlengerade"><span class="mi-no">Modell 6</span><span class="mi-name">Zahlengerade</span><span class="mi-sub">Alles zusammen</span><span class="mi-prog" data-mk="nl"></span></a>
+  </nav>
+
+  <div class="stations">
+
+    <!-- Modell 1 Thermometer -->
+    <article class="station" id="thermometer">
+      <header class="st-head">
+        <span class="st-no">Modell 1</span>
+        <h3>Das Thermometer</h3>
+        <p class="st-lead">Das Thermometer kennst du aus dem Wetterbericht.</p>
+      </header>
+      <div class="st-body">
+        <div class="st-text">
+          <ul>
+            <li>Bei 0 °C gefriert Wasser zu Eis. Die 0 ist die Grenze.</li>
+            <li>Über null: positive Temperaturen, z. B. <span class="numv is-pos">8 °C</span>.</li>
+            <li>Unter null: negative Temperaturen mit Minus, z. B. <span class="numv is-neg">−4 °C</span>.</li>
+            <li>Je weiter unten, desto kälter. <span class="numv is-neg">−10 °C</span> ist kälter als <span class="numv is-neg">−2 °C</span>.</li>
+          </ul>
+          <div class="merke"><span class="box-lbl">Merke</span>Temperaturen unter 0 °C schreibt man mit Minuszeichen. <span class="numv is-neg">−4 °C</span> spricht man: „minus vier Grad“.</div>
+        </div>
+        <div class="lab">
+          <p class="lab-hint">Ziehe am Thermometer oder nutze die Knöpfe.</p>
+          <div class="thermo-lab">
+            <svg id="thermo-svg" viewBox="0 0 170 430" role="img" aria-label="Thermometer von minus 15 bis plus 25 Grad"></svg>
+            <div style="display:grid; gap:14px; min-width:0">
+              <div class="readout" id="thermo-read" aria-live="polite"></div>
+              <p class="say" id="thermo-say"></p>
+              <div class="btn-row">
+                <button class="btn btn-ghost btn-sm" type="button" data-td="-5">−5</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-td="-1">−1</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-td="1">+1</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-td="5">+5</button>
+              </div>
+              <label class="sr" for="thermo-range">Temperatur einstellen</label>
+              <input class="range" id="thermo-range" type="range" min="-15" max="25" step="0.5" value="-3">
+            </div>
+          </div>
+          <div class="challenge" id="ch-thermo">
+            <div class="ch-top"><span class="ch-count"></span><button class="ch-next" type="button"></button></div>
+            <p class="ch-text"></p>
+            <p class="ch-status" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Modell 2 Fahrstuhl -->
+    <article class="station" id="fahrstuhl">
+      <header class="st-head">
+        <span class="st-no">Modell 2</span>
+        <h3>Der Fahrstuhl</h3>
+        <p class="st-lead">Im Fahrstuhl zählt man die Stockwerke vom Erdgeschoss aus.</p>
+      </header>
+      <div class="st-body">
+        <div class="st-text">
+          <ul>
+            <li>Das Erdgeschoss hat die Nummer <span class="numv">0</span>.</li>
+            <li>Über der Erde: <span class="numv is-pos">1, 2, 3 …</span></li>
+            <li>Unter der Erde: <span class="numv is-neg">−1, −2, −3 …</span> (Keller, Tiefgarage)</li>
+            <li>Nach oben fahren: Die Zahl wird größer. Nach unten fahren: Die Zahl wird kleiner.</li>
+          </ul>
+          <div class="merke"><span class="box-lbl">Merke</span>Die Zahl sagt dir, wie viele Stockwerke du über oder unter dem Erdgeschoss bist. <span class="numv is-neg">−2</span> heißt: 2 Stockwerke unter dem Erdgeschoss.</div>
+        </div>
+        <div class="lab">
+          <p class="lab-hint">Drücke einen Knopf. Der Fahrstuhl fährt los.</p>
+          <div class="lift-lab">
+            <div class="building" id="building">
+              <div class="floors" id="floors"></div>
+              <div class="shaft"><div class="car" id="car" aria-hidden="true"><i></i><i></i></div></div>
+              <div class="ground" id="ground"><span>Erdoberfläche</span></div>
+            </div>
+            <div class="lift-panel">
+              <div class="lift-lcd" aria-live="polite"><span class="lift-arrow" id="lift-arrow" aria-hidden="true"></span><span id="lift-lcd">0</span></div>
+              <div class="lift-btns" id="lift-btns"></div>
+            </div>
+          </div>
+          <div>
+            <p class="lift-log" id="lift-log">Du stehst im Erdgeschoss. Wohin willst du fahren?</p>
+            <p class="calc" id="lift-calc"></p>
+          </div>
+          <div class="challenge" id="ch-lift">
+            <div class="ch-top"><span class="ch-count"></span><button class="ch-next" type="button"></button></div>
+            <p class="ch-text"></p>
+            <p class="ch-status" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Modell 3 Konto -->
+    <article class="station" id="konto">
+      <header class="st-head">
+        <span class="st-no">Modell 3</span>
+        <h3>Das Konto</h3>
+        <p class="st-lead">Auf einem Konto liegt Geld. Manchmal fehlt aber Geld.</p>
+      </header>
+      <div class="st-body">
+        <div class="st-text">
+          <ul>
+            <li><b>Guthaben:</b> Das Geld gehört dir. Der Kontostand ist positiv, z. B. <span class="numv is-pos">15,00 €</span>.</li>
+            <li><b>Schulden:</b> Du musst Geld zurückzahlen. Der Kontostand ist negativ, z. B. <span class="numv is-neg">−10,00 €</span>.</li>
+            <li>Kontostand <span class="numv">0,00 €</span>: kein Guthaben und keine Schulden.</li>
+            <li>Beim Geld gibt es Kommazahlen, z. B. <span class="numv is-neg">−12,50 €</span>.</li>
+          </ul>
+          <div class="merke"><span class="box-lbl">Merke</span>Schulden schreibt man mit Minus. <span class="numv is-neg">−10,00 €</span> heißt: Es fehlen 10 €.</div>
+        </div>
+        <div class="lab">
+          <div class="bank">
+            <div class="bank-top"><span>Mein Konto</span><span class="pill" id="konto-status"></span></div>
+            <div class="bank-bal" id="konto-bal" aria-live="polite"></div>
+            <p class="say" id="konto-say"></p>
+            <svg id="konto-bar" viewBox="0 0 400 64" role="img" aria-label="Kontostand auf einer Skala von minus 60 bis plus 60 Euro"></svg>
+            <div class="bank-btns" id="konto-btns"></div>
+            <div class="table-wrap">
+              <table class="auszug">
+                <caption>Kontoauszug (neueste Buchung oben)</caption>
+                <thead><tr><th>Buchung</th><th class="n">Betrag</th><th class="n">Kontostand</th></tr></thead>
+                <tbody id="konto-rows"></tbody>
+              </table>
+            </div>
+            <div><button class="btn btn-ghost btn-sm" type="button" id="konto-reset">Neu starten mit 15,00 €</button></div>
+          </div>
+          <div class="challenge" id="ch-konto">
+            <div class="ch-top"><span class="ch-count"></span><button class="ch-next" type="button"></button></div>
+            <p class="ch-text"></p>
+            <form class="ch-form" novalidate>
+              <label class="sr" for="konto-ans">Deine Antwort in Euro</label>
+              <span class="num-in"><button class="sign-btn" type="button" data-for="konto-ans" aria-label="Minuszeichen setzen oder entfernen">±</button><input id="konto-ans" type="text" autocomplete="off" placeholder="z. B. −7,50"><span class="unit">€</span></span>
+              <button class="btn btn-sm" type="submit">Prüfen</button>
+            </form>
+            <p class="ch-status" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Modell 4 Meeresspiegel -->
+    <article class="station" id="meer">
+      <header class="st-head">
+        <span class="st-no">Modell 4</span>
+        <h3>Der Meeresspiegel</h3>
+        <p class="st-lead">Höhen misst man vom Meeresspiegel aus.</p>
+      </header>
+      <div class="st-body">
+        <div class="st-text">
+          <ul>
+            <li>Der Meeresspiegel hat die Höhe <span class="numv">0 m</span>.</li>
+            <li>Über dem Wasser: positive Höhen, z. B. <span class="numv is-pos">+30 m</span>.</li>
+            <li>Unter Wasser: negative Höhen, z. B. <span class="numv is-neg">−12 m</span>.</li>
+            <li>Je tiefer, desto kleiner die Zahl.</li>
+          </ul>
+          <div class="merke"><span class="box-lbl">Merke</span>Das Plus darf man weglassen: <span class="numv is-pos">+30 m</span> ist dasselbe wie <span class="numv is-pos">30 m</span>. Das Minus darf man nie weglassen.</div>
+          <div class="fact"><span class="box-lbl">Wusstest du?</span>Auf Landkarten stehen Höhen oft als „m ü. NN“. Das heißt: Meter über Normalnull, also über dem Meeresspiegel. Das Ufer vom Toten Meer liegt mehr als 400 m unter dem Meeresspiegel.</div>
+        </div>
+        <div class="lab">
+          <p class="lab-hint">Tippe auf ein Objekt im Bild oder auf einen Namen.</p>
+          <svg id="sea-svg" viewBox="0 0 640 400" role="img" aria-label="Querschnitt durch Küste und Meer mit Höhenskala"></svg>
+          <div class="obj-btns" id="sea-btns"></div>
+          <p class="sea-info" id="sea-info" aria-live="polite"></p>
+          <div class="challenge" id="ch-sea">
+            <div class="ch-top"><span class="ch-count"></span><button class="ch-next" type="button"></button></div>
+            <p class="ch-text"></p>
+            <p class="ch-status" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Modell 5 Plättchen -->
+    <article class="station" id="plaettchen">
+      <header class="st-head">
+        <span class="st-no">Modell 5</span>
+        <h3>Das Plättchenmodell</h3>
+        <p class="st-lead">Mit Plus- und Minus-Plättchen kannst du jede ganze Zahl legen.</p>
+      </header>
+      <div class="st-body">
+        <div class="st-text">
+          <ul>
+            <li>Ein Plus-Plättchen <span class="numv is-pos">(+)</span> ist <span class="numv is-pos">+1</span>.</li>
+            <li>Ein Minus-Plättchen <span class="numv is-neg">(−)</span> ist <span class="numv is-neg">−1</span>.</li>
+            <li>Ein Plus und ein Minus zusammen ergeben 0. Das heißt <b>Nullpaar</b>.</li>
+            <li>Was nach den Nullpaaren übrig bleibt, ist die Zahl.</li>
+          </ul>
+          <div class="merke"><span class="box-lbl">Merke</span>Nullpaare ändern den Wert nicht. Du kannst sie dazulegen oder wegnehmen.</div>
+        </div>
+        <div class="lab">
+          <div class="btn-row">
+            <button class="btn btn-sm" type="button" id="chip-add-p" style="background:var(--pos-soft);color:var(--pos);border-color:var(--pos-fill)">+ Plus-Plättchen</button>
+            <button class="btn btn-sm" type="button" id="chip-add-m" style="background:var(--neg-soft);color:var(--neg);border-color:var(--neg-fill)">− Minus-Plättchen</button>
+            <button class="btn btn-ghost btn-sm" type="button" id="chip-pairs">Nullpaare wegnehmen</button>
+            <button class="btn btn-ghost btn-sm" type="button" id="chip-clear">Alles leeren</button>
+          </div>
+          <div class="chip-board" id="chip-board" aria-live="polite"></div>
+          <p class="lab-hint">Tipp: Tippe auf ein Plättchen, um es wegzunehmen.</p>
+          <p class="chip-sum" id="chip-sum"></p>
+          <div class="challenge" id="ch-chips">
+            <div class="ch-top"><span class="ch-count"></span><button class="ch-next" type="button"></button></div>
+            <p class="ch-text"></p>
+            <p class="ch-status" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Modell 6 Zahlengerade -->
+    <article class="station" id="zahlengerade">
+      <header class="st-head">
+        <span class="st-no">Modell 6</span>
+        <h3>Die Zahlengerade</h3>
+        <p class="st-lead">Alle Modelle haben eine 0. Kippst du das Thermometer, bekommst du die Zahlengerade.</p>
+      </header>
+
+      <div class="kipp">
+        <svg id="kipp-svg" viewBox="0 0 400 400" role="img" aria-label="Ein Thermometer kippt und wird zur Zahlengerade"></svg>
+        <div class="kipp-text">
+          <p class="kipp-cap" id="kipp-cap"></p>
+          <p id="kipp-sub"></p>
+          <button class="btn" type="button" id="kipp-btn">Thermometer kippen</button>
+        </div>
+      </div>
+
+      <div class="st-body">
+        <div class="st-text">
+          <ul>
+            <li>Rechts von 0: positive Zahlen. Links von 0: negative Zahlen.</li>
+            <li>Auch Kommazahlen haben einen Platz: <span class="numv is-neg">−2,5</span> liegt genau zwischen <span class="numv is-neg">−3</span> und <span class="numv is-neg">−2</span>.</li>
+            <li>Die Zahl weiter links ist kleiner: <span class="numv"><span class="is-neg">−5</span> &lt; <span class="is-neg">−2</span></span>.</li>
+            <li><b>Gegenzahl:</b> gleich weit weg von 0, aber auf der anderen Seite.</li>
+            <li><b>Betrag:</b> der Abstand zur 0. Er ist nie negativ.</li>
+          </ul>
+          <div class="merke"><span class="box-lbl">Merke</span>Das Zeichen <b>&lt;</b> heißt „kleiner als“. Das Zeichen <b>&gt;</b> heißt „größer als“. Die Spitze zeigt immer auf die kleinere Zahl.</div>
+        </div>
+        <div class="lab">
+          <p class="lab-hint">Ziehe den Punkt A. Oder tippe auf die Zahlengerade. Du kannst auch die Pfeiltasten benutzen.</p>
+          <div class="nl-wrap" id="nl-wrap"><svg id="nl-svg" role="img" aria-label="Zahlengerade mit verschiebbaren Punkten"></svg></div>
+          <div class="toggles">
+            <label for="nl-opp"><input type="checkbox" id="nl-opp">Gegenzahl zeigen</label>
+            <label for="nl-abs"><input type="checkbox" id="nl-abs">Betrag zeigen</label>
+            <label for="nl-b"><input type="checkbox" id="nl-b">Punkt B zum Vergleichen</label>
+          </div>
+          <div class="nl-read" id="nl-read" aria-live="polite"></div>
+          <div class="challenge" id="ch-nl">
+            <div class="ch-top"><span class="ch-count"></span><button class="ch-next" type="button"></button></div>
+            <p class="ch-text"></p>
+            <p class="ch-status" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 3 ÜBUNG ============ -->
+<section id="ueben" class="phase c3">
+  <div class="phase-head">
+    <span class="phase-tag">3 · Übung · 20 Minuten</span>
+    <h2>Jetzt übst du</h2>
+    <p class="phase-intro">Starte im Grundniveau. Wenn du 5 von 6 Aufgaben gelöst hast, geh ins nächste Niveau. Bei jeder Aufgabe gibt es eine Hilfekarte. Nutze sie, wenn du nicht weiterkommst.</p>
+  </div>
+  <div class="levels" role="tablist" aria-label="Niveau wählen" id="levels"></div>
+  <p class="level-desc" id="level-desc"></p>
+  <div class="nudge" id="nudge" hidden><span id="nudge-t"></span><button class="btn btn-sm" type="button" id="nudge-b"></button></div>
+  <div class="progress"><div class="pbar"><span id="pfill"></span></div><span class="ptext" id="ptext"></span></div>
+  <div id="task-lists"></div>
+</section>
+
+<!-- ============ 4 SICHERUNG ============ -->
+<section id="merken" class="phase c4">
+  <div class="phase-head">
+    <span class="phase-tag">4 · Sicherung · 10 Minuten</span>
+    <h2>Das hast du gelernt</h2>
+    <p class="phase-intro">Schreibe die drei Merkkästen mit dem Zeichen „Ins Heft“ in dein Heft. Fülle dann „Ich kann …“ aus und schreibe deinen Code auf.</p>
+  </div>
+
+  <div class="merk-grid">
+    <div class="merk-card"><h3>Positive Zahlen</h3><p>Zahlen größer als 0. Das Plus darf man weglassen.</p><p class="ex is-pos">+3 = 3 · 7,5 · 12</p></div>
+    <div class="merk-card"><h3>Negative Zahlen</h3><p>Zahlen kleiner als 0. Sie haben immer ein Minuszeichen.</p><p class="ex is-neg">−3 · −7,5 · −12</p></div>
+    <div class="merk-card"><h3>Die Null</h3><p>0 ist weder positiv noch negativ. Sie ist die Grenze.</p><p class="ex">0</p></div>
+    <div class="merk-card"><h3>Vorzeichen</h3><p>Das + oder − vor einer Zahl heißt Vorzeichen.</p><p class="ex"><span class="is-pos">+5</span> · <span class="is-neg">−5</span></p></div>
+    <div class="merk-card"><span class="heft-tag">Ins Heft</span><h3>Gegenzahl</h3><p>Gleicher Abstand zur 0, anderes Vorzeichen.</p><p class="ex"><span class="is-pos">4</span> und <span class="is-neg">−4</span></p></div>
+    <div class="merk-card"><span class="heft-tag">Ins Heft</span><h3>Betrag</h3><p>Der Abstand einer Zahl zur 0. Ein Betrag ist nie negativ.</p><p class="ex">|<span class="is-neg">−4</span>| = <span class="is-pos">4</span></p></div>
+    <div class="merk-card" style="grid-column:1/-1"><span class="heft-tag">Ins Heft</span><h3>Zahlen ordnen</h3><p>Auf der Zahlengerade ist die Zahl weiter links immer kleiner.</p><p class="ex"><span class="is-neg">−5</span> &lt; <span class="is-neg">−2</span> &lt; <span class="is-neg">−0,5</span> &lt; 0 &lt; <span class="is-pos">3</span></p></div>
+  </div>
+
+  <h3 class="sub-h">Die Modelle im Vergleich</h3>
+  <div class="cmp-wrap">
+    <table class="cmp-table">
+      <thead><tr><th>Modell</th><th>Die 0 bedeutet</th><th>Positiv</th><th>Negativ</th><th>Beispiel</th></tr></thead>
+      <tbody>
+        <tr><th>Thermometer</th><td>0 °C, Wasser gefriert</td><td>über null, wärmer</td><td>unter null, kälter</td><td class="numv is-neg">−4 °C</td></tr>
+        <tr><th>Fahrstuhl</th><td>Erdgeschoss</td><td>über der Erde</td><td>Keller, Tiefgarage</td><td class="numv is-neg">−2</td></tr>
+        <tr><th>Konto</th><td>kein Geld</td><td>Guthaben</td><td>Schulden</td><td class="numv is-neg">−10,00 €</td></tr>
+        <tr><th>Meeresspiegel</th><td>Wasseroberfläche</td><td>über dem Meer</td><td>unter Wasser</td><td class="numv is-neg">−12 m</td></tr>
+        <tr><th>Plättchen</th><td>gleich viele Plus und Minus</td><td>mehr Plus-Plättchen</td><td>mehr Minus-Plättchen</td><td class="numv is-neg">2 Plus, 5 Minus: −3</td></tr>
+        <tr><th>Zahlengerade</th><td>Nullpunkt</td><td>rechts von 0</td><td>links von 0</td><td class="numv is-neg">−3,5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-h">Welche Zahlen gibt es?</h3>
+  <div class="sets">
+    <div class="set q">
+      <span class="set-name">Rationale Zahlen <span class="set-sym">ℚ</span></span>
+      <span class="set-ex">Alle Zahlen, die du als Bruch schreiben kannst: auch Kommazahlen und Brüche mit Minus, z. B. −2,5 · −¾ · 0,5 · 3,25</span>
+      <div class="set z">
+        <span class="set-name">Ganze Zahlen <span class="set-sym">ℤ</span></span>
+        <span class="set-ex">Zahlen ohne Komma, auch negative: … −3 · −2 · −1 …</span>
+        <div class="set n">
+          <span class="set-name">Natürliche Zahlen <span class="set-sym">ℕ</span></span>
+          <span class="set-ex">0 · 1 · 2 · 3 · 4 …</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-h">Ich kann …</h3>
+  <p style="margin-bottom:14px; color:var(--muted)">Schätze dich ehrlich ein. Bei „Noch unsicher“ erscheint ein Link zum passenden Teil.</p>
+  <ul class="cans" id="cans"></ul>
+
+  <h3 class="sub-h" id="ergebnis">Dein Ergebnis-Code</h3>
+  <div class="result" id="result">
+    <div>
+      <p class="rc-lbl">Name</p>
+      <p class="rc-name" id="rc-name">Nicht angemeldet</p>
+      <p class="rc-lbl">Code</p>
+      <p class="rc-code empty" id="rc-code" aria-live="polite">–––––-–––––-–––––</p>
+    </div>
+    <ul class="rc-stats" id="rc-stats"></ul>
+    <p class="rc-warn" id="rc-warn" hidden>Achtung: Dieser Browser speichert nichts. Lass die Seite offen, bis du deinen Code abgeschrieben hast.</p>
+    <ol class="rc-steps">
+      <li>Arbeite den Fahrplan ab: Modelle, Übung, „Ich kann …“.</li>
+            <li>Schreibe deinen <b>Namen</b> und den <b>Code</b> auf einen Zettel. Gib den Zettel deiner Lehrkraft.</li>
+    </ol>
+    <p class="rc-steps" style="padding:0; color:var(--muted); font-size:15px">Der Code ändert sich, wenn du weiterarbeitest. Schreibe ihn erst am Ende ab.</p>
+    <div class="rc-foot" id="rc-foot">
+      <button class="btn btn-ghost btn-sm" type="button" id="logout-ask">Abmelden</button>
+      <span class="confirm" id="logout-confirm" hidden>Hast du deinen Code aufgeschrieben?
+        <button class="btn btn-sm" type="button" id="logout-yes">Ja, abmelden</button>
+        <button class="btn btn-ghost btn-sm" type="button" id="logout-no">Abbrechen</button>
+      </span>
+    </div>
+  </div>
+
+  <details class="teacher">
+    <summary>Hinweise für die Lehrkraft</summary>
+    <ul>
+      <li>Passt zum Fachcurriculum H7, Thema 1 „Rationale Zahlen“: ganze Zahlen, rationale Zahlen, Anordnung, Zunahme und Abnahme.</li>
+      <li>Ablauf in zwei Schulstunden, selbstständig nach Fahrplan: 1. Stunde Einstieg (5 Min.) und Modelle 1–4 (40 Min.). 2. Stunde Modelle 5–6 (15 Min.), Übung (20 Min.), Sicherung mit Code (10 Min.).</li>
+      <li>Differenzierung: Das Grundniveau nutzt vor allem Temperatur und Geld. Das passt auch zum Hinweis für Lernende mit Förderschwerpunkt Lernen im Curriculum.</li>
+      <li>Sprachhilfen: Wortspeicher oben rechts, Hilfekarten bei jeder Übungsaufgabe.</li>
+      <li>Anmeldung: Die SuS melden sich mit Vorname und Anfangsbuchstabe an. Der Fortschritt bleibt nur auf ihrem Gerät. Auf geteilten Geräten bitte am Ende abmelden.</li>
+      <li>Abgabe: Am Ende steht unter „Dein Ergebnis-Code“ ein Code mit 15 Zeichen. Er zeigt für jede Übungsaufgabe, ob sie auf Anhieb, mit Hilfe oder gar nicht gelöst wurde. Die SuS schreiben Namen und Code auf einen Zettel. Die Auswertung machst du auf deiner Lehrerseite.</li>
+    </ul>
+  </details>
+</section>
+</main>
+
+<footer class="wrap">Mathematik Klasse 7 · Rationale Zahlen · Einführung</footer>
+
+<div class="login-bd" id="login" role="dialog" aria-modal="true" aria-labelledby="login-title" hidden>
+  <form class="login-card" id="login-form" novalidate>
+    <span class="brand-mark" aria-hidden="true" style="width:40px;height:40px"><i>−</i><i>+</i></span>
+    <h2 id="login-title">Willkommen!</h2>
+    <p>Melde dich mit deinem Namen an. So kann die Seite deinen Fortschritt speichern.</p>
+    <label for="login-name">Vorname und erster Buchstabe vom Nachnamen</label>
+    <input id="login-name" type="text" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Max M.">
+    <p class="login-err" id="login-err" aria-live="polite"></p>
+    <button class="btn" type="submit">Anmelden</button>
+    <p class="login-note">Dein Fortschritt wird nur auf diesem Gerät gespeichert. Am Ende bekommst du einen Code für deine Lehrkraft.</p>
+  </form>
+</div>
+
+<div class="words-bd" id="words-bd" hidden></div>
+<aside class="words" id="words" role="dialog" aria-modal="true" aria-labelledby="words-title" hidden>
+  <div class="words-head"><h2 id="words-title">Wortspeicher</h2><button class="icon-btn" type="button" id="words-close" aria-label="Wortspeicher schließen">×</button></div>
+  <p class="words-intro">Wichtige Wörter in einfacher Sprache.</p>
+  <dl class="wl">
+    <div><dt>positive Zahl</dt><dd>Eine Zahl größer als 0. Beispiel: 5 oder +5</dd></div>
+    <div><dt>negative Zahl</dt><dd>Eine Zahl kleiner als 0. Sie hat ein Minus. Beispiel: −5</dd></div>
+    <div><dt>das Vorzeichen</dt><dd>Das + oder − vor einer Zahl.</dd></div>
+    <div><dt>die Gegenzahl</dt><dd>Die Zahl auf der anderen Seite der 0. Sie ist gleich weit weg von 0. Beispiel: 3 und −3</dd></div>
+    <div><dt>der Betrag</dt><dd>Der Abstand einer Zahl zur 0. Beispiel: |−3| = 3</dd></div>
+    <div><dt>die Zahlengerade</dt><dd>Eine Linie mit Zahlen. Links stehen die kleinen Zahlen, rechts die großen.</dd></div>
+    <div><dt>über null / unter null</dt><dd>Über null: mehr als 0. Unter null: weniger als 0.</dd></div>
+    <div><dt>das Guthaben</dt><dd>Geld auf dem Konto, das dir gehört.</dd></div>
+    <div><dt>die Schulden</dt><dd>Geld, das du zurückzahlen musst.</dd></div>
+    <div><dt>der Kontostand</dt><dd>So viel Geld ist gerade auf dem Konto.</dd></div>
+    <div><dt>der Meeresspiegel</dt><dd>Die Höhe der Wasseroberfläche im Meer. Sie ist 0 m.</dd></div>
+    <div><dt>das Erdgeschoss</dt><dd>Das Stockwerk auf Höhe der Straße. Es hat die Nummer 0.</dd></div>
+    <div><dt>die Tiefgarage</dt><dd>Ein Parkplatz unter der Erde.</dd></div>
+    <div><dt>steigen / zunehmen</dt><dd>Es wird mehr. Die Zahl wird größer.</dd></div>
+    <div><dt>sinken / abnehmen</dt><dd>Es wird weniger. Die Zahl wird kleiner.</dd></div>
+    <div><dt>kleiner als ( &lt; )</dt><dd>−5 &lt; 2 heißt: −5 ist kleiner als 2.</dd></div>
+    <div><dt>größer als ( &gt; )</dt><dd>2 &gt; −5 heißt: 2 ist größer als −5.</dd></div>
+    <div><dt>ganze Zahlen</dt><dd>Zahlen ohne Komma: … −2; −1; 0; 1; 2 …</dd></div>
+    <div><dt>rationale Zahlen</dt><dd>Alle ganzen Zahlen und auch Brüche und Kommazahlen, positiv und negativ. Beispiel: −2,5</dd></div>
+  </dl>
+</aside>
+
+<script>
+(function(){
+"use strict";
+const MINUS='−';
+const reduceMotion = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>Array.from((r||document).querySelectorAll(s));
+
+function fmt(n,o){ o=o||{}; if(Object.is(n,-0)) n=0; const a=Math.abs(n); let s=(o.dec!=null)?a.toFixed(o.dec):String(Math.round(a*100)/100); s=s.replace('.',','); if(n<0) return MINUS+s; if(o.plus&&n>0) return '+'+s; return s; }
+function euro(n){ return fmt(n,{dec:2})+' €'; }
+function sc(n){ return n>0?'is-pos':(n<0?'is-neg':'is-zero'); }
+function nspan(n,o,suf){ return '<span class="numv '+sc(n)+'">'+fmt(n,o)+(suf||'')+'</span>'; }
+function parseNum(str){
+  let s=String(str==null?'':str).trim().toLowerCase().replace(/[−–—]/g,'-').replace(/\s+/g,'');
+  s=s.replace(/(°c|°|grad|euro|€|meter|m|stockwerke|stockwerk|ebene|plättchen)$/,'');
+  s=s.replace(',', '.');
+  if(!/^[+-]?(\d+(\.\d+)?|\.\d+)$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+function parseList(str){
+  let s=String(str==null?'':str).toLowerCase().replace(/\bund\b/g,';').replace(/,\s+/g,';');
+  return s.split(/[;\s]+/).filter(Boolean).map(parseNum);
+}
+const eq=(a,b)=>Math.abs(a-b)<1e-9;
+function tween(anim,from,to,dur,cb,done){
+  const id=++anim.id;
+  if(reduceMotion||dur<=0||from===to){ cb(to); if(done) done(); return; }
+  const t0=performance.now();
+  const step=now=>{ if(id!==anim.id) return; const k=Math.min(1,(now-t0)/dur); const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2; cb(from+(to-from)*e); if(k<1) requestAnimationFrame(step); else if(done) done(); };
+  requestAnimationFrame(step);
+}
+function svgPoint(svg,e){ const m=svg.getScreenCTM(); if(!m) return {x:0,y:0}; const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse()); return {x:p.x,y:p.y}; }
+
+/* ---------- Ergebnis-Code ---------- */
+/* Ergebnis-Code v2 (RZ2): 15 Zeichen, Crockford-Base32, 75 Bit
+   3 Bit Version | 36 Bit Übung (18 Aufgaben x 2 Bit: 0 nicht bearbeitet, 1 versucht/nicht gelöst,
+   2 gelöst mit Hilfekarte oder nach Fehlversuch, 3 auf Anhieb gelöst) | 12 Bit Modelle (6 x Mini-Aufgaben 0-3)
+   12 Bit Ich-kann (7 Stellen, Basis 3) | 4 Bit Vorzeichenfehler | 8 Bit Prüfsumme (an den Namen gebunden) */
+const RZ = (function(){
+  const ALPH='0123456789ABCDEFGHJKMNPQRSTVWXYZ', VER=1, LEN=15;
+  const MODELS=[{k:'thermo',name:'Thermometer',n:3},{k:'lift',name:'Fahrstuhl',n:3},{k:'konto',name:'Konto',n:3},{k:'sea',name:'Meeresspiegel',n:3},{k:'chips',name:'Plättchen',n:3},{k:'nl',name:'Zahlengerade',n:3}];
+  const NT=18;
+  function normName(s){ return String(s||'').replace(/ß/g,'ss').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z]/g,''); }
+  function fnv(str){ let h=0x811c9dc5; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,0x01000193)>>>0; } return h>>>0; }
+  function bits(v,n){ let s=''; for(let i=n-1;i>=0;i--) s+=(Math.floor(v/Math.pow(2,i))%2)?'1':'0'; return s; }
+  function encode(name,d){
+    let b=bits(VER,3);
+    for(let i=0;i<NT;i++) b+=bits(Math.max(0,Math.min(3,d.status[i]|0)),2);
+    for(let i=0;i<6;i++) b+=bits(Math.max(0,Math.min(3,d.models[i]|0)),2);
+    let c=0; for(let i=6;i>=0;i--) c=c*3+((d.cans[i]|0)%3);
+    b+=bits(c,12);
+    b+=bits(Math.min(15,d.sign|0),4);
+    b+=bits(fnv('RZ2|'+normName(name)+'|'+b)&0xFF,8);
+    let out=''; for(let i=0;i<75;i+=5) out+=ALPH[parseInt(b.slice(i,i+5),2)];
+    return out.slice(0,5)+'-'+out.slice(5,10)+'-'+out.slice(10);
+  }
+  function clean(code){ return String(code||'').toUpperCase().replace(/O/g,'0').replace(/[IL]/g,'1').replace(/[^0-9A-Z]/g,''); }
+  function pretty(code){ const s=clean(code); return s.length===LEN?s.slice(0,5)+'-'+s.slice(5,10)+'-'+s.slice(10):s; }
+  function decode(name,code){
+    const s=clean(code);
+    if(s.length!==LEN) return {ok:false,err:'len'};
+    let b=''; for(const ch of s){ const v=ALPH.indexOf(ch); if(v<0) return {ok:false,err:'char'}; b+=bits(v,5); }
+    const data=b.slice(0,67), chk=parseInt(b.slice(67),2);
+    const ok=parseInt(data.slice(0,3),2)===VER && (fnv('RZ2|'+normName(name)+'|'+data)&0xFF)===chk;
+    let p=3; const status=[]; for(let i=0;i<NT;i++){ status.push(parseInt(data.slice(p,p+2),2)); p+=2; }
+    const models=[]; for(let i=0;i<6;i++){ models.push(parseInt(data.slice(p,p+2),2)); p+=2; }
+    let c=parseInt(data.slice(p,p+12),2); p+=12; const cans=[]; for(let i=0;i<7;i++){ cans.push(c%3); c=Math.floor(c/3); }
+    const sign=parseInt(data.slice(p,p+4),2);
+    return {ok:ok,err:ok?null:'check',status:status,models:models,cans:cans,sign:sign};
+  }
+  return {encode:encode,decode:decode,normName:normName,clean:clean,pretty:pretty,MODELS:MODELS,NT:NT,LEN:LEN};
+})();
+
+
+/* ---------- Anmeldung + Fortschritt (nur auf diesem Gerät) ---------- */
+const MK=['thermo','lift','konto','sea','chips','nl'];
+const store={ok:true};
+function lsGet(k){ try{ return window.localStorage.getItem(k); }catch(_){ store.ok=false; return null; } }
+function lsSet(k,v){ try{ window.localStorage.setItem(k,v); }catch(_){ store.ok=false; } }
+function blankP(){ const m={}; MK.forEach(k=>m[k]=[]); return {name:null,ex:Array.from({length:18},()=>({s:0,w:0,h:0})),cans:new Array(7).fill(0),mini:m,signIds:[],intro:[]}; }
+function exStatus(e){ return e.s?((e.w===0&&!e.h)?3:2):(e.w>0?1:0); }
+let P=blankP();
+function saveP(){
+  if(!P.name) return;
+  lsSet('rz2:p:'+RZ.normName(P.name), JSON.stringify(P));
+  document.dispatchEvent(new CustomEvent('rz:progress'));
+}
+function loadP(name){
+  const f=blankP(); f.name=name;
+  const raw=lsGet('rz2:p:'+RZ.normName(name));
+  if(raw){ try{ const o=JSON.parse(raw);
+    if(Array.isArray(o.ex)) o.ex.slice(0,18).forEach((e,i)=>{ if(e) f.ex[i]={s:e.s?1:0,w:Math.max(0,e.w|0),h:e.h?1:0}; });
+    if(Array.isArray(o.intro)) f.intro=o.intro.filter(x=>typeof x==='string');
+    if(Array.isArray(o.cans)) o.cans.slice(0,7).forEach((v,i)=>f.cans[i]=(v===1||v===2)?v:0);
+    if(o.mini) MK.forEach(k=>{ if(Array.isArray(o.mini[k])) f.mini[k]=o.mini[k].filter(n=>Number.isInteger(n)); });
+    if(Array.isArray(o.signIds)) f.signIds=o.signIds.filter(x=>typeof x==='string');
+  }catch(_){} }
+  P=f;
+}
+function markSign(id){ if(!P.name) return; if(!P.signIds.includes(id)){ P.signIds.push(id); saveP(); } }
+function markMini(key,i){ if(!P.name) return; if(!P.mini[key].includes(i)){ P.mini[key].push(i); saveP(); } }
+(function(){ const cur=lsGet('rz2:current'); if(cur) loadP(cur); })();
+
+/* ---------- Mini-Aufgaben (generic) ---------- */
+function Challenge(key,root,tasks){
+  const cnt=$('.ch-count',root), txt=$('.ch-text',root), st=$('.ch-status',root), nx=$('.ch-next',root), form=$('.ch-form',root), inp=form?$('input',form):null;
+  let i=0, solved=false;
+  function status(msg,cls){ st.innerHTML=msg; st.className='ch-status'+(cls?' '+cls:''); }
+  function show(){
+    solved=false; const t=tasks[i];
+    cnt.textContent='Mini-Aufgabe '+(i+1)+' von '+tasks.length;
+    txt.innerHTML=t.text;
+    const before=P.mini[key].includes(i);
+    status((before?'✓ Die hast du schon gelöst. Du kannst sie noch einmal machen. ':'')+(t.input?'Rechne im Kopf oder probiere es im Modell aus. Gib dann deine Antwort ein.':'Probiere es im Modell aus.'),'');
+    nx.textContent=i<tasks.length-1?'Nächste Mini-Aufgabe':'Wieder von vorn';
+    if(inp) inp.value='';
+    if(t.start) t.start();
+  }
+  function win(t,state){ solved=true; markMini(key,i); const ok=typeof t.ok==='function'?t.ok(state):(t.ok||''); status('<strong>Richtig!</strong> '+ok,'ok'); }
+  function check(state){ if(solved) return; const t=tasks[i]; if(t.input) return; if(t.test(state)) win(t,state); }
+  if(form) form.addEventListener('submit',e=>{
+    e.preventDefault(); const t=tasks[i]; if(!t.input) return;
+    const v=parseNum(inp.value);
+    if(isNaN(v)){ status('Gib eine Zahl ein, zum Beispiel −7,50.','bad'); return; }
+    if(eq(v,t.ans)) win(t);
+    else if(eq(Math.abs(v),Math.abs(t.ans))){ markSign('m-'+key+'-'+i); status('Fast! Prüfe das Vorzeichen.','bad'); }
+    else status('Noch nicht richtig. Probiere es im Modell aus.','bad');
+  });
+  nx.addEventListener('click',()=>{ i=(i+1)%tasks.length; show(); });
+  return {show,check};
+}
+
+/* sign toggle buttons */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.sign-btn'); if(!b) return;
+  const inp=document.getElementById(b.dataset.for); if(!inp) return;
+  let v=inp.value.trim();
+  if(/^[-−–]/.test(v)) v=v.replace(/^[-−–]\s*/,''); else v=MINUS+v.replace(/^\+/,'');
+  inp.value=v; inp.focus();
+});
+
+/* ---------- Einstieg ---------- */
+$$('.situ-btn').forEach(b=>b.addEventListener('click',()=>{
+  const a=document.getElementById(b.getAttribute('aria-controls'));
+  const open=b.getAttribute('aria-expanded')==='true';
+  b.setAttribute('aria-expanded',String(!open)); a.hidden=open;
+  b.textContent=open?'Was bedeutet das?':'Antwort ausblenden';
+  const id=b.getAttribute('aria-controls');
+  if(!open&&P.name&&!P.intro.includes(id)){ P.intro.push(id); saveP(); }
+}));
+
+/* ---------- Modell 1: Thermometer ---------- */
+(function(){
+  const svg=$('#thermo-svg'); const TMIN=-15,TMAX=25,TOP=24,BOT=364,CX=62;
+  const Y=t=>TOP+(TMAX-t)*(BOT-TOP)/(TMAX-TMIN);
+  const bulbCY=BOT+38;
+  let g='';
+  g+='<rect x="84" y="'+(Y(TMAX)-10)+'" width="84" height="'+(Y(0)-Y(TMAX)+10)+'" rx="6" fill="var(--pos-soft)"/>';
+  g+='<rect x="84" y="'+Y(0)+'" width="84" height="'+(Y(TMIN)-Y(0)+10)+'" rx="6" fill="var(--neg-soft)"/>';
+  const tube='x="'+(CX-13)+'" y="'+(TOP-16)+'" width="26" height="'+(BOT-TOP+40)+'" rx="13"';
+  g+='<rect '+tube+' fill="none" stroke="var(--line-strong)" stroke-width="3"/><circle cx="'+CX+'" cy="'+bulbCY+'" r="25" fill="none" stroke="var(--line-strong)" stroke-width="3"/>';
+  g+='<rect '+tube+' fill="var(--surface)"/><circle cx="'+CX+'" cy="'+bulbCY+'" r="25" fill="var(--surface)"/>';
+  g+='<rect id="th-liq" x="'+(CX-6)+'" width="12" y="0" height="0"/>';
+  g+='<circle id="th-bulb" cx="'+CX+'" cy="'+bulbCY+'" r="18"/>';
+  for(let t=TMIN;t<=TMAX;t++){
+    const y=Y(t), major=t%5===0;
+    g+='<line x1="'+(CX+16)+'" x2="'+(CX+(major?34:24))+'" y1="'+y+'" y2="'+y+'" stroke="var(--'+(major?'ink':'line-strong')+')" stroke-width="'+(major?2:1.2)+'"/>';
+    if(major) g+='<text x="'+(CX+40)+'" y="'+(y+5)+'" class="th-lbl '+sc(t)+'">'+fmt(t)+'</text>';
+  }
+  g+='<line x1="'+(CX-24)+'" x2="168" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="var(--zero)" stroke-width="2.5"/>';
+  g+='<text x="166" y="'+(Y(0)-6)+'" text-anchor="end" class="th-small">Gefrierpunkt</text>';
+  g+='<text x="'+(CX+40)+'" y="12" class="th-small">°C</text>';
+  g+='<circle id="th-handle" cx="'+CX+'" cy="0" r="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5"/>';
+  svg.innerHTML=g;
+  const liq=$('#th-liq'), bulb=$('#th-bulb'), handle=$('#th-handle'), range=$('#thermo-range'), read=$('#thermo-read'), say=$('#thermo-say');
+  const anim={id:0}; let cur=-3, shown=-3;
+  function paint(v){ const y=Y(v); liq.setAttribute('y',y); liq.setAttribute('height',Math.max(0,bulbCY-y)); handle.setAttribute('cy',y); }
+  function color(v){ const c=v>0?'var(--pos-fill)':v<0?'var(--neg-fill)':'var(--line-strong)'; liq.style.fill=c; bulb.style.fill=c; }
+  let ch;
+  function set(v,animate){
+    v=Math.max(TMIN,Math.min(TMAX,Math.round(v*2)/2)); const from=shown; cur=v;
+    color(v); range.value=v;
+    read.innerHTML=nspan(v,{},' °C');
+    say.textContent = v<0 ? 'Es ist '+fmt(-v)+' Grad unter null. Man sagt: minus '+fmt(-v)+' Grad.' : v>0 ? 'Es ist '+fmt(v)+' Grad über null.' : 'Genau null Grad. Wasser gefriert zu Eis.';
+    tween(anim,from,v,animate===false?0:Math.min(650,150+Math.abs(v-from)*25),x=>{shown=x;paint(x);});
+    if(ch) ch.check(v);
+  }
+  $$('[data-td]').forEach(b=>b.addEventListener('click',()=>set(cur+Number(b.dataset.td))));
+  range.addEventListener('input',()=>set(Number(range.value),false));
+  let drag=false;
+  const fromEvent=e=>{ const p=svgPoint(svg,e); return TMAX-(p.y-TOP)*(TMAX-TMIN)/(BOT-TOP); };
+  svg.addEventListener('pointerdown',e=>{ drag=true; try{svg.setPointerCapture(e.pointerId);}catch(_){} set(fromEvent(e)); });
+  svg.addEventListener('pointermove',e=>{ if(drag) set(fromEvent(e),false); });
+  svg.addEventListener('pointerup',()=>{drag=false}); svg.addEventListener('pointercancel',()=>{drag=false});
+  ch=Challenge('thermo',$('#ch-thermo'),[
+    {text:'Stelle ein: 4 Grad unter null.', test:v=>v===-4, ok:'Das sind −4 °C.'},
+    {text:'Stelle ein: minus sieben komma fünf Grad.', test:v=>v===-7.5, ok:'Auch Kommazahlen können negativ sein: −7,5 °C.'},
+    {text:'Es sind 2 °C. Dann wird es 5 Grad kälter. Stelle die neue Temperatur ein.', start:()=>set(2), test:v=>v===-3, ok:'Von 2 °C bis 0 °C sind es 2 Grad. Dann noch 3 Grad weiter: −3 °C.'},
+  ]);
+  set(-3,false); ch.show();
+})();
+
+/* ---------- Modell 2: Fahrstuhl ---------- */
+(function(){
+  const FL=[5,4,3,2,1,0,-1,-2,-3], ROW=44;
+  const NAMES={5:'5. Stock',4:'4. Stock',3:'3. Stock',2:'2. Stock',1:'1. Stock',0:'Erdgeschoss',[-1]:'Keller',[-2]:'Tiefgarage',[-3]:'Tiefgarage'};
+  const floorsEl=$('#floors'), car=$('#car'), lcd=$('#lift-lcd'), arrow=$('#lift-arrow'), logEl=$('#lift-log'), calcEl=$('#lift-calc'), btns=$('#lift-btns');
+  floorsEl.innerHTML=FL.map(f=>'<div class="fl'+(f<0?' under':'')+'" data-f="'+f+'"><span class="fl-num '+sc(f)+'">'+fmt(f)+'</span><span class="fl-name">'+NAMES[f]+'</span></div>').join('');
+  $('#ground').style.top=(FL.indexOf(0)+1)*ROW+'px';
+  btns.innerHTML=FL.map(f=>'<button class="lift-btn '+(f<0?'neg':f>0?'pos':'')+'" type="button" data-f="'+f+'" aria-label="Stockwerk '+fmt(f)+'">'+fmt(f)+'</button>').join('');
+  let cur=0, moving=false, timer=null, ch;
+  const pos=f=>'translateY('+(FL.indexOf(f)*ROW)+'px)';
+  function mark(f){ $$('.fl',floorsEl).forEach(r=>r.classList.toggle('here',Number(r.dataset.f)===f)); }
+  function place(f){ clearTimeout(timer); moving=false; car.style.transitionDuration='0ms'; car.style.transform=pos(f); cur=f; lcd.textContent=fmt(f); arrow.textContent=''; mark(f); $$('.lift-btn',btns).forEach(b=>b.classList.remove('lit')); }
+  function where(f){ return f===0?'im Erdgeschoss':f>0?'im '+f+'. Stock':'auf Ebene '+fmt(f)+' (unter der Erde)'; }
+  function go(t){
+    if(moving) return;
+    if(t===cur){ logEl.textContent='Du bist schon hier: '+where(t)+'.'; calcEl.textContent=''; return; }
+    moving=true; const from=cur, dir=t>from?1:-1, steps=Math.abs(t-from), stepMs=reduceMotion?0:360;
+    const btn=$('.lift-btn[data-f="'+t+'"]',btns); if(btn) btn.classList.add('lit');
+    arrow.textContent=dir>0?'▲':'▼';
+    const arrive=()=>{
+      moving=false; arrow.textContent=''; mark(cur); if(btn) btn.classList.remove('lit');
+      logEl.innerHTML='Von '+nspan(from)+' nach '+nspan(t)+': '+steps+' '+(steps===1?'Stockwerk':'Stockwerke')+' nach '+(dir>0?'oben':'unten')+'. Du bist jetzt '+where(t)+'.';
+      calcEl.textContent='Als Rechnung: '+fmt(from)+' '+(dir>0?'+':MINUS)+' '+steps+' = '+fmt(t);
+      if(ch) ch.check(cur);
+    };
+    if(stepMs===0){ cur=t; car.style.transitionDuration='0ms'; car.style.transform=pos(t); lcd.textContent=fmt(t); arrive(); return; }
+    let k=0;
+    const tick=()=>{ k++; cur=from+dir*k; car.style.transitionDuration=stepMs+'ms'; car.style.transform=pos(cur); lcd.textContent=fmt(cur); timer=setTimeout(k<steps?tick:arrive,stepMs); };
+    tick();
+  }
+  btns.addEventListener('click',e=>{ const b=e.target.closest('.lift-btn'); if(b) go(Number(b.dataset.f)); });
+  ch=Challenge('lift',$('#ch-lift'),[
+    {text:'Fahre in die Tiefgarage auf Ebene −2.', start:()=>{place(0); logEl.textContent='Du stehst im Erdgeschoss.'; calcEl.textContent='';}, test:f=>f===-2, ok:'Ebene −2 ist 2 Stockwerke unter dem Erdgeschoss.'},
+    {text:'Du bist im 3. Stock. Fahre 4 Stockwerke nach unten.', start:()=>{place(3); logEl.textContent='Du bist jetzt im 3. Stock.'; calcEl.textContent='';}, test:f=>f===-1, ok:'Von 3 aus 4 nach unten: Du bist im Keller auf −1.'},
+    {text:'Du bist auf Ebene −3. Fahre 5 Stockwerke nach oben.', start:()=>{place(-3); logEl.textContent='Du bist jetzt auf Ebene −3.'; calcEl.textContent='';}, test:f=>f===2, ok:'Von −3 aus 5 nach oben: Du bist im 2. Stock.'},
+  ]);
+  place(0); ch.show();
+})();
+
+/* ---------- Modell 3: Konto ---------- */
+(function(){
+  const BOOK=[{l:'Taschengeld',a:10},{l:'Pfand zurück',a:2.5},{l:'Kinokarte',a:-12.5},{l:'Videospiel',a:-25}];
+  const balEl=$('#konto-bal'), stEl=$('#konto-status'), sayEl=$('#konto-say'), bar=$('#konto-bar'), rows=$('#konto-rows'), btns=$('#konto-btns');
+  let bal=15, log=[];
+  btns.innerHTML=BOOK.map((b,i)=>'<button class="book '+(b.a>0?'in':'out')+'" type="button" data-i="'+i+'"><b>'+(b.a>0?'+':MINUS)+' '+fmt(Math.abs(b.a),{dec:2})+' €</b><span>'+b.l+'</span></button>').join('');
+  const X=v=>200+Math.max(-60,Math.min(60,v))*3;
+  function render(){
+    balEl.innerHTML='<span class="'+sc(bal)+'">'+euro(bal)+'</span>';
+    stEl.className='pill '+(bal>0?'pos':bal<0?'neg':'zero');
+    stEl.textContent=bal>0?'Guthaben':bal<0?'Schulden':'Kontostand null';
+    sayEl.textContent=bal>0?'Du hast '+fmt(bal,{dec:2})+' € Guthaben.':bal<0?'Du hast '+fmt(-bal,{dec:2})+' € Schulden. Es fehlen '+fmt(-bal,{dec:2})+' €.':'Kein Guthaben und keine Schulden.';
+    let g='<rect x="20" y="22" width="360" height="14" rx="7" fill="var(--surface-2)" stroke="var(--line)"/>';
+    const x=X(bal);
+    if(bal!==0) g+='<rect x="'+Math.min(200,x)+'" y="22" width="'+Math.abs(x-200)+'" height="14" fill="'+(bal>0?'var(--pos-fill)':'var(--neg-fill)')+'"/>';
+    [-60,-30,0,30,60].forEach(v=>{ g+='<line x1="'+X(v)+'" x2="'+X(v)+'" y1="'+(v===0?14:38)+'" y2="'+(v===0?44:42)+'" stroke="var(--'+(v===0?'zero':'line-strong')+')" stroke-width="'+(v===0?3:1.5)+'"/><text x="'+X(v)+'" y="58" text-anchor="middle" style="font:600 12px var(--display)" class="'+sc(v)+'">'+fmt(v)+' €</text>'; });
+    g+='<path d="M'+x+',18 l-7,-10 h14 z" fill="var(--ink)"/>';
+    bar.innerHTML=g;
+    rows.innerHTML=log.slice(-5).reverse().map(r=>'<tr><td>'+r.l+'</td><td class="n '+sc(r.a)+'">'+(r.a>0?'+':'')+fmt(r.a,{dec:2})+' €</td><td class="n '+sc(r.b)+'">'+euro(r.b)+'</td></tr>').join('');
+  }
+  function start(v,label){ bal=v; log=[{l:label||'Startguthaben',a:v,b:v}]; render(); }
+  btns.addEventListener('click',e=>{ const b=e.target.closest('.book'); if(!b) return; const it=BOOK[Number(b.dataset.i)]; bal=Math.round((bal+it.a)*100)/100; log.push({l:it.l,a:it.a,b:bal}); render(); });
+  $('#konto-reset').addEventListener('click',()=>start(15));
+  const ch=Challenge('konto',$('#ch-konto'),[
+    {input:true, text:'Du hast 15,00 € Guthaben. Du kaufst ein Videospiel für 25,00 €. Wie ist dein Kontostand?', start:()=>start(15), ans:-10, ok:'Es fehlen 10 €. Der Kontostand ist −10,00 €.'},
+    {input:true, text:'Dein Kontostand ist −10,00 €. Du bekommst 10,00 € Taschengeld. Wie ist dein Kontostand jetzt?', start:()=>start(-10,'Übertrag'), ans:0, ok:'Die Schulden sind weg. Der Kontostand ist 0,00 €.'},
+    {input:true, text:'Dein Kontostand ist 0,00 €. Du kaufst eine Kinokarte für 12,50 €. Wie ist dein Kontostand?', start:()=>start(0,'Übertrag'), ans:-12.5, ok:'Der Kontostand ist −12,50 €.'},
+  ]);
+  start(15); ch.show();
+})();
+
+/* ---------- Modell 4: Meeresspiegel ---------- */
+(function(){
+  const svg=$('#sea-svg'), info=$('#sea-info'), btns=$('#sea-btns');
+  const W0=170, K=3.6; const Y=h=>W0-h*K;
+  const OBJ=[
+    {id:'moewe',name:'Möwe',x:180,h:30},
+    {id:'turm',name:'Leuchtturm',x:600,h:40,long:'Die Lampe vom Leuchtturm'},
+    {id:'boot',name:'Boot',x:280,h:0},
+    {id:'taucher',name:'Taucher',x:180,h:-12},
+    {id:'fisch',name:'Fisch',x:370,h:-22},
+    {id:'uboot',name:'U-Boot',x:300,h:-40}
+  ];
+  const ICON={
+    moewe:'<path d="M-16,2 Q-8,-9 0,2 Q8,-9 16,2" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>',
+    turm:'<polygon points="-7,6 7,6 11,82 -11,82" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><polygon points="-8.2,26 8.2,26 9,40 -9,40" fill="var(--p3)"/><polygon points="-9.6,54 9.6,54 10.4,68 -10.4,68" fill="var(--p3)"/><rect x="-7" y="-7" width="14" height="13" fill="var(--pos-fill)" stroke="var(--ink)" stroke-width="2"/><polygon points="-10,-7 10,-7 0,-17" fill="var(--ink)"/>',
+    boot:'<line x1="0" y1="-4" x2="0" y2="-48" stroke="var(--ink)" stroke-width="2.5"/><path d="M3,-46 L3,-8 L30,-8 Z" fill="var(--pos-soft)" stroke="var(--ink)" stroke-width="1.5"/><path d="M-36,-4 L36,-4 L25,11 L-25,11 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>',
+    taucher:'<rect x="-9" y="-12" width="18" height="6" rx="3" fill="var(--pos-fill)"/><ellipse cx="0" cy="0" rx="18" ry="6" fill="var(--ink)"/><circle cx="-23" cy="-2" r="6.5" fill="var(--ink)"/><path d="M17,0 L31,-7 L31,7 Z" fill="var(--p3)"/><circle cx="-27" cy="-16" r="2.5" fill="none" stroke="var(--ink)" stroke-width="1.2"/><circle cx="-24" cy="-25" r="3.5" fill="none" stroke="var(--ink)" stroke-width="1.2"/>',
+    fisch:'<ellipse cx="0" cy="0" rx="17" ry="9" fill="var(--p3)"/><path d="M14,0 L27,-10 L27,10 Z" fill="var(--p3)"/><circle cx="-8" cy="-2" r="2.2" fill="var(--surface)"/>',
+    uboot:'<rect x="-10" y="-24" width="22" height="15" rx="3" fill="var(--ink)"/><path d="M7,-24 L7,-34 L15,-34" fill="none" stroke="var(--ink)" stroke-width="3"/><rect x="-46" y="-11" width="92" height="22" rx="11" fill="var(--ink)"/><circle cx="-22" cy="0" r="3.5" fill="var(--pos-fill)"/><circle cx="-6" cy="0" r="3.5" fill="var(--pos-fill)"/><circle cx="10" cy="0" r="3.5" fill="var(--pos-fill)"/>'
+  };
+  let sel='taucher', ch;
+  function desc(o){ return o.h>0?fmt(o.h)+' m über dem Meeresspiegel':o.h<0?fmt(-o.h)+' m unter dem Meeresspiegel':'genau auf dem Meeresspiegel'; }
+  function draw(){
+    let g='<defs><linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--neg-soft)"/><stop offset="1" style="stop-color:var(--neg-fill);stop-opacity:.45"/></linearGradient></defs>';
+    g+='<rect x="0" y="0" width="640" height="400" fill="var(--surface)"/>';
+    g+='<rect x="64" y="0" width="576" height="'+W0+'" fill="var(--pos-soft)"/>';
+    g+='<rect x="64" y="'+W0+'" width="576" height="'+(400-W0)+'" fill="url(#seaG)"/>';
+    g+='<path d="M64,400 L64,384 C150,372 250,394 330,382 C400,372 440,384 490,366 L490,400 Z" fill="var(--earth)" stroke="var(--earth-line)" stroke-width="1.5"/>';
+    g+='<path d="M470,400 L486,330 C500,250 520,200 540,170 C555,145 575,112 600,108 L640,106 L640,400 Z" fill="var(--earth)" stroke="var(--earth-line)" stroke-width="1.5"/>';
+    g+='<line x1="64" x2="545" y1="'+W0+'" y2="'+W0+'" stroke="var(--neg)" stroke-width="2.5"/>';
+    g+='<text x="470" y="'+(W0-8)+'" text-anchor="end" style="font:600 13px var(--display)" class="is-neg">Meeresspiegel</text>';
+    for(let v=40; v>=-50; v-=10){ const y=Y(v); g+='<line x1="58" x2="66" y1="'+y+'" y2="'+y+'" stroke="var(--'+(v===0?'zero':'line-strong')+')" stroke-width="'+(v===0?3:1.5)+'"/><text x="54" y="'+(y+4.5)+'" text-anchor="end" style="font:600 13px var(--display)" class="'+sc(v)+'">'+fmt(v,{plus:true})+' m</text>'; }
+    g+='<line x1="64" x2="64" y1="0" y2="400" stroke="var(--line-strong)" stroke-width="1.5"/>';
+    const s=OBJ.find(o=>o.id===sel);
+    if(s){ const y=Y(s.h); g+='<line x1="66" x2="'+(s.x-36)+'" y1="'+y+'" y2="'+y+'" stroke="var(--p2)" stroke-width="2" stroke-dasharray="6 5"/>'; }
+    OBJ.forEach(o=>{
+      const y=Y(o.h), on=o.id===sel;
+      g+='<g class="sea-obj" data-id="'+o.id+'" tabindex="0" role="button" aria-label="'+o.name+'" transform="translate('+o.x+','+y+')">';
+      g+='<circle class="hit" r="34" fill="'+(on?'color-mix(in srgb, var(--p2) 14%, transparent)':'transparent')+'" stroke="'+(on?'var(--p2)':'none')+'" stroke-width="2.5" stroke-dasharray="'+(on?'5 4':'0')+'"/>';
+      g+=ICON[o.id]+'</g>';
+    });
+    if(s){ const y=Y(s.h); g+='<rect x="2" y="'+(y-13)+'" width="60" height="26" rx="13" fill="var(--p2)"/><text x="32" y="'+(y+5)+'" text-anchor="middle" style="font:700 13px var(--display);fill:var(--surface)">'+fmt(s.h,{plus:true})+' m</text>'; }
+    svg.innerHTML=g;
+    btns.innerHTML=OBJ.map(o=>'<button class="obj-btn" type="button" data-id="'+o.id+'" aria-pressed="'+(o.id===sel)+'">'+o.name+'</button>').join('');
+    if(s) info.innerHTML='<b>'+(s.long||s.name)+'</b> ist '+desc(s)+'. Höhe: '+nspan(s.h,{plus:true},' m');
+  }
+  function pick(id){ sel=id; draw(); if(ch) ch.check(id); }
+  svg.addEventListener('click',e=>{ const g=e.target.closest('.sea-obj'); if(g) pick(g.dataset.id); });
+  svg.addEventListener('keydown',e=>{ const g=e.target.closest('.sea-obj'); if(g&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); pick(g.dataset.id); setTimeout(()=>{const n=svg.querySelector('[data-id="'+g.dataset.id+'"]'); if(n) n.focus();},0);} });
+  btns.addEventListener('click',e=>{ const b=e.target.closest('.obj-btn'); if(b) pick(b.dataset.id); });
+  ch=Challenge('sea',$('#ch-sea'),[
+    {text:'Tippe auf das Objekt, das 40 m unter dem Meeresspiegel ist.', test:id=>id==='uboot', ok:'Das U-Boot ist bei −40 m.'},
+    {text:'Tippe auf das Objekt, das genau bei 0 m ist.', test:id=>id==='boot', ok:'Das Boot schwimmt auf dem Meeresspiegel: 0 m.'},
+    {text:'Welches Objekt ist 10 m tiefer als der Taucher? Tippe es an.', test:id=>id==='fisch', ok:'Der Taucher ist bei −12 m. 10 m tiefer ist −22 m. Dort ist der Fisch.'},
+  ]);
+  draw(); ch.show();
+})();
+
+/* ---------- Modell 5: Plättchen ---------- */
+(function(){
+  const board=$('#chip-board'), sum=$('#chip-sum'), MAX=24;
+  let p=3, m=5, ch;
+  function chip(t){ return '<button class="chip '+(t==='p'?'plus':'minus')+'" type="button" data-t="'+t+'" aria-label="'+(t==='p'?'Plus-Plättchen wegnehmen':'Minus-Plättchen wegnehmen')+'">'+(t==='p'?'+':MINUS)+'</button>'; }
+  function render(){
+    const pairs=Math.min(p,m), rp=p-pairs, rm=m-pairs, v=p-m;
+    let h='';
+    if(pairs>0){ h+='<span class="board-lbl">Nullpaare</span><div class="pairs">'; for(let i=0;i<pairs;i++) h+='<div class="pair">'+chip('p')+chip('m')+'<span class="pair-lbl">= 0</span></div>'; h+='</div>'; }
+    if(rp+rm>0){ h+='<span class="board-lbl">Übrig</span><div class="rest">'; for(let i=0;i<rp;i++) h+=chip('p'); for(let i=0;i<rm;i++) h+=chip('m'); h+='</div>'; }
+    if(p+m===0) h='<span class="board-lbl">Leer. Lege Plättchen dazu.</span>';
+    board.innerHTML=h;
+    const rest=rp>0?rp+' Plus-Plättchen':rm>0?rm+' Minus-Plättchen':'nichts';
+    sum.innerHTML=p+' Plus und '+m+' Minus. Übrig bleibt '+rest+'. Die Zahl ist '+nspan(v)+'.';
+    if(ch) ch.check({p:p,m:m,v:v});
+  }
+  $('#chip-add-p').addEventListener('click',()=>{ if(p+m<MAX){p++;render();} });
+  $('#chip-add-m').addEventListener('click',()=>{ if(p+m<MAX){m++;render();} });
+  $('#chip-clear').addEventListener('click',()=>{ p=0;m=0;render(); });
+  $('#chip-pairs').addEventListener('click',()=>{
+    const pairs=Math.min(p,m); if(!pairs) return;
+    $$('.pair',board).forEach(el=>el.classList.add('gone'));
+    setTimeout(()=>{ p-=pairs; m-=pairs; render(); }, reduceMotion?0:320);
+  });
+  board.addEventListener('click',e=>{ const c=e.target.closest('.chip'); if(!c) return; if(c.dataset.t==='p'&&p>0) p--; else if(c.dataset.t==='m'&&m>0) m--; render(); });
+  ch=Challenge('chips',$('#ch-chips'),[
+    {text:'Lege die Zahl −4.', test:s=>s.v===-4, ok:s=>'Mit '+s.p+' Plus und '+s.m+' Minus bleiben 4 Minus übrig.'},
+    {text:'Lege die Zahl 0 mit genau 6 Plättchen.', test:s=>s.p===3&&s.m===3, ok:'3 Plus und 3 Minus sind 3 Nullpaare. Das ist 0.'},
+    {text:'Lege die Zahl −3 mit genau 7 Plättchen.', test:s=>s.p===2&&s.m===5, ok:'2 Plus und 5 Minus: 2 Nullpaare, 3 Minus bleiben übrig.'},
+  ]);
+  render(); ch.show();
+})();
+
+/* ---------- Modell 6: Kippen + Zahlengerade ---------- */
+(function(){
+  const svg=$('#kipp-svg'), cap=$('#kipp-cap'), sub=$('#kipp-sub'), btn=$('#kipp-btn');
+  const CX=200, CY=190, S=28; const anim={id:0}; let t=0, target=0;
+  function draw(t){
+    const th=t*Math.PI/2, c=Math.cos(th), s=Math.sin(th);
+    const P=(v,off)=>{ off=off||0; const x0=0, y0=-v*S; const x=x0*c-y0*s, y=x0*s+y0*c; return [CX+x+off*c, CY+y+off*s]; };
+    const L=(a,b,st,w,op,extra)=>'<line x1="'+a[0].toFixed(1)+'" y1="'+a[1].toFixed(1)+'" x2="'+b[0].toFixed(1)+'" y2="'+b[1].toFixed(1)+'" stroke="'+st+'" stroke-width="'+w+'" stroke-linecap="round" opacity="'+op.toFixed(2)+'"'+(extra||'')+'/>';
+    const f=1-t; let g='';
+    // tube
+    g+=L(P(-6.2),P(5.9),'var(--line-strong)',32,f); g+=L(P(-6.2),P(5.9),'var(--surface)',26,f);
+    const bp=P(-6.9); g+='<circle cx="'+bp[0]+'" cy="'+bp[1]+'" r="23" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="3" opacity="'+f.toFixed(2)+'"/>';
+    g+=L(P(-6.2),P(5.9),'var(--surface)',26,f);
+    g+='<circle cx="'+bp[0]+'" cy="'+bp[1]+'" r="16" fill="var(--neg-fill)" opacity="'+(f*.9).toFixed(2)+'"/>';
+    g+=L(P(-6.6),P(-3),'var(--neg-fill)',10,f*.9);
+    // axis
+    g+=L(P(-5.7),P(0),'var(--neg-fill)',4,1); g+=L(P(0),P(5.7),'var(--pos-fill)',4,1);
+    const tip=P(6.1), b1=P(5.6,-7), b2=P(5.6,7);
+    g+='<polygon points="'+tip.join(',')+' '+b1.join(',')+' '+b2.join(',')+'" fill="var(--pos-fill)" opacity="'+t.toFixed(2)+'"/>';
+    for(let v=-5; v<=5; v++){
+      const a=P(v,-7), b=P(v,7); g+=L(a,b,v===0?'var(--zero)':'var(--ink)',v===0?3:2,1);
+      const lp=P(v,24+ (1-t)*2);
+      g+='<text x="'+lp[0].toFixed(1)+'" y="'+(lp[1]+5).toFixed(1)+'" text-anchor="middle" style="font:'+(v===0?700:600)+' 15px var(--display)" class="'+sc(v)+'">'+fmt(v)+'</text>';
+    }
+    const u=P(5.9,26); g+='<text x="'+u[0]+'" y="'+(u[1]+5)+'" text-anchor="middle" style="font:600 13px var(--display)" opacity="'+f.toFixed(2)+'" class="is-zero">°C</text>';
+    const d=P(-3), dl=P(-3,-24);
+    g+='<circle cx="'+d[0]+'" cy="'+d[1]+'" r="8" fill="var(--neg-fill)" stroke="var(--surface)" stroke-width="2" opacity="'+t.toFixed(2)+'"/>';
+    g+='<text x="'+dl[0]+'" y="'+(dl[1]+5)+'" text-anchor="middle" style="font:700 15px var(--display)" class="is-neg" opacity="'+t.toFixed(2)+'">−3</text>';
+    svg.innerHTML=g;
+  }
+  function label(){
+    if(target===0){ cap.textContent='Senkrecht: das Thermometer'; sub.textContent='Oben ist es warm, unten ist es kalt. Das Thermometer zeigt −3 °C.'; btn.textContent='Thermometer kippen'; }
+    else { cap.textContent='Waagerecht: die Zahlengerade'; sub.textContent='Oben wird rechts, unten wird links. Aus −3 °C wird der Punkt −3.'; btn.textContent='Zurückkippen'; }
+  }
+  btn.addEventListener('click',()=>{ target=target?0:1; label(); tween(anim,t,target,1400,x=>{t=x;draw(x);}); });
+  draw(0); label();
+
+  /* interactive number line */
+  const wrap=$('#nl-wrap'), nl=$('#nl-svg'), read=$('#nl-read'), cOpp=$('#nl-opp'), cAbs=$('#nl-abs'), cB=$('#nl-b');
+  const st={a:-3.5,b:2,R:10}; let W=800, PAD=36, ch;
+  const X=v=>PAD+(v+st.R)*(W-2*PAD)/(2*st.R);
+  const V=x=>Math.round(((x-PAD)*(2*st.R)/(W-2*PAD)-st.R)*2)/2;
+  const clamp=v=>Math.max(-st.R,Math.min(st.R,v));
+  function pin(key,v){
+    const x=X(v), isA=key==='a';
+    return '<g class="nl-pin" data-k="'+key+'" tabindex="0" role="slider" aria-label="Punkt '+(isA?'A':'B')+'" aria-valuemin="'+(-st.R)+'" aria-valuemax="'+st.R+'" aria-valuenow="'+v+'" aria-valuetext="'+fmt(v)+'">'+
+      '<line x1="'+x+'" x2="'+x+'" y1="54" y2="100" stroke="var(--ink)" stroke-width="2"/>'+
+      '<circle class="head" cx="'+x+'" cy="38" r="16" fill="'+(isA?'var(--ink)':'var(--surface)')+'" stroke="var(--ink)" stroke-width="2.5"/>'+
+      '<text x="'+x+'" y="44" text-anchor="middle" style="font:700 16px var(--display);fill:'+(isA?'var(--surface)':'var(--ink)')+'">'+(isA?'A':'B')+'</text>'+
+      '<circle cx="'+x+'" cy="100" r="7" fill="'+(v>0?'var(--pos-fill)':v<0?'var(--neg-fill)':'var(--ink)')+'" stroke="var(--surface)" stroke-width="2"/></g>';
+  }
+  function render(){
+    const w=wrap.clientWidth||800; st.R=w<560?5:10; W=st.R===5?420:800; st.a=clamp(st.a); st.b=clamp(st.b);
+    nl.setAttribute('viewBox','0 0 '+W+' 190');
+    const a=st.a, b=st.b; let g='';
+    g+='<rect x="0" y="0" width="'+W+'" height="190" fill="transparent"/>';
+    g+='<line x1="'+(PAD-14)+'" x2="'+X(0)+'" y1="100" y2="100" stroke="var(--neg-fill)" stroke-width="4"/>';
+    g+='<line x1="'+X(0)+'" x2="'+(W-PAD+10)+'" y1="100" y2="100" stroke="var(--pos-fill)" stroke-width="4"/>';
+    g+='<polygon points="'+(W-PAD+22)+',100 '+(W-PAD+8)+',92 '+(W-PAD+8)+',108" fill="var(--pos-fill)"/>';
+    for(let v=-st.R; v<=st.R+1e-9; v+=0.5){
+      const x=X(v), whole=Number.isInteger(v);
+      g+='<line x1="'+x+'" x2="'+x+'" y1="'+(whole?(v===0?88:91):95)+'" y2="'+(whole?(v===0?112:109):105)+'" stroke="var(--'+(v===0?'zero':whole?'ink':'line-strong')+')" stroke-width="'+(v===0?3:whole?1.8:1.2)+'"/>';
+      if(whole) g+='<text x="'+x+'" y="130" text-anchor="middle" style="font:'+(v===0?700:600)+' 14px var(--display)" class="'+sc(v)+'">'+fmt(v)+'</text>';
+    }
+    if(cOpp.checked && a!==0){
+      const xa=X(a), xo=X(-a), h=Math.min(34,12+Math.abs(xa-xo)*0.08);
+      g+='<path d="M'+xa+',96 Q'+X(0)+','+(96-h*2)+' '+xo+',96" fill="none" stroke="var(--p2)" stroke-width="2" stroke-dasharray="5 5"/>';
+      g+='<circle cx="'+xo+'" cy="100" r="8" fill="var(--surface)" stroke="var(--p2)" stroke-width="3"/>';
+    }
+    if(cAbs.checked && a!==0){
+      const x0=X(0), xa=X(a), y=152;
+      g+='<line x1="'+x0+'" x2="'+xa+'" y1="'+y+'" y2="'+y+'" stroke="var(--p3)" stroke-width="3"/>';
+      g+='<line x1="'+x0+'" x2="'+x0+'" y1="'+(y-7)+'" y2="'+(y+7)+'" stroke="var(--p3)" stroke-width="3"/><line x1="'+xa+'" x2="'+xa+'" y1="'+(y-7)+'" y2="'+(y+7)+'" stroke="var(--p3)" stroke-width="3"/>';
+      g+='<text x="'+((x0+xa)/2)+'" y="'+(y+24)+'" text-anchor="middle" style="font:700 14px var(--display);fill:var(--p3)">Abstand '+fmt(Math.abs(a))+'</text>';
+    }
+    if(cB.checked) g+=pin('b',b);
+    g+=pin('a',a);
+    nl.innerHTML=g;
+    let r='<div><span class="k">Punkt A</span>'+nspan(a)+'</div>';
+    if(cOpp.checked) r+='<div><span class="k" style="color:var(--p2)">Gegenzahl</span>'+(a===0?'Die Gegenzahl von 0 ist 0.':'Die Gegenzahl von '+nspan(a)+' ist '+nspan(-a)+'.')+'</div>';
+    if(cAbs.checked) r+='<div><span class="k" style="color:var(--p3)">Betrag</span>|'+nspan(a)+'| = '+nspan(Math.abs(a))+' (Abstand zur 0)</div>';
+    if(cB.checked){
+      r+='<div><span class="k">Punkt B</span>'+nspan(b)+'</div>';
+      const rel = a<b ? nspan(a)+' &lt; '+nspan(b)+'. A liegt weiter links. Also ist A kleiner als B.' : a>b ? nspan(a)+' &gt; '+nspan(b)+'. A liegt weiter rechts. Also ist A größer als B.' : 'A und B sind gleich: '+nspan(a)+' = '+nspan(b)+'.';
+      r+='<div><span class="k">Vergleich</span>'+rel+'</div>';
+    }
+    read.innerHTML=r;
+    if(ch) ch.check(st);
+  }
+  let dragK=null;
+  function nearest(x){ if(!cB.checked) return 'a'; return Math.abs(x-X(st.a))<=Math.abs(x-X(st.b))?'a':'b'; }
+  nl.addEventListener('pointerdown',e=>{ const p=svgPoint(nl,e); const pinEl=e.target.closest('.nl-pin'); dragK=pinEl?pinEl.dataset.k:nearest(p.x); try{nl.setPointerCapture(e.pointerId);}catch(_){} st[dragK]=clamp(V(p.x)); render(); const f=nl.querySelector('.nl-pin[data-k="'+dragK+'"]'); if(f) f.focus({preventScroll:true}); });
+  nl.addEventListener('pointermove',e=>{ if(!dragK) return; const p=svgPoint(nl,e); const v=clamp(V(p.x)); if(v!==st[dragK]){ st[dragK]=v; render(); const f=nl.querySelector('.nl-pin[data-k="'+dragK+'"]'); if(f) f.focus({preventScroll:true}); } });
+  const end=()=>{dragK=null}; nl.addEventListener('pointerup',end); nl.addEventListener('pointercancel',end);
+  nl.addEventListener('keydown',e=>{ const pinEl=e.target.closest('.nl-pin'); if(!pinEl) return; const k=pinEl.dataset.k; let d=0; if(e.key==='ArrowLeft'||e.key==='ArrowDown') d=-0.5; if(e.key==='ArrowRight'||e.key==='ArrowUp') d=0.5; if(!d) return; e.preventDefault(); st[k]=clamp(st[k]+d); render(); const f=nl.querySelector('.nl-pin[data-k="'+k+'"]'); if(f) f.focus(); });
+  [cOpp,cAbs,cB].forEach(c=>c.addEventListener('change',render));
+  let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(render,120); });
+  ch=Challenge('nl',$('#ch-nl'),[
+    {text:'Setze A auf −4,5.', test:s=>s.a===-4.5, ok:'−4,5 liegt genau zwischen −5 und −4.'},
+    {text:'Setze A so, dass die Gegenzahl von A genau 3 ist.', start:()=>{cOpp.checked=true; render();}, test:s=>s.a===-3, ok:'Die Gegenzahl von −3 ist 3.'},
+    {text:'Schalte Punkt B ein. Setze A und B so, dass beide negativ sind und A größer ist als B.', start:()=>{cB.checked=true; render();}, test:s=>cB.checked&&s.a<0&&s.b<0&&s.a>s.b, ok:s=>fmt(s.a)+' &gt; '+fmt(s.b)+'. A ist näher an der 0, also größer.'}
+  ]);
+  render(); ch.show();
+})();
+
+/* ---------- Übung ---------- */
+function miniThermo(v){
+  const T=14,B=174, Y=t=>T+(10-t)*(B-T)/20; const bc=192; let g='<svg width="84" height="214" viewBox="0 0 84 214" role="img" aria-label="Thermometer">';
+  g+='<rect x="12" y="'+(T-10)+'" width="18" height="'+(B-T+22)+'" rx="9" fill="none" stroke="var(--line-strong)" stroke-width="2.5"/><circle cx="21" cy="'+bc+'" r="15" fill="none" stroke="var(--line-strong)" stroke-width="2.5"/>';
+  g+='<rect x="12" y="'+(T-10)+'" width="18" height="'+(B-T+22)+'" rx="9" fill="var(--surface)"/><circle cx="21" cy="'+bc+'" r="15" fill="var(--surface)"/>';
+  const c=v>0?'var(--pos-fill)':'var(--neg-fill)';
+  g+='<rect x="17" y="'+Y(v)+'" width="8" height="'+(bc-Y(v))+'" fill="'+c+'"/><circle cx="21" cy="'+bc+'" r="10" fill="'+c+'"/>';
+  for(let t=-10;t<=10;t++){ const y=Y(t), maj=t%5===0; g+='<line x1="32" x2="'+(maj?46:39)+'" y1="'+y+'" y2="'+y+'" stroke="var(--'+(maj?'ink':'line-strong')+')" stroke-width="'+(maj?1.8:1)+'"/>'; if(maj) g+='<text x="50" y="'+(y+4.5)+'" style="font:600 12px var(--display)" class="'+sc(t)+'">'+fmt(t)+'</text>'; }
+  g+='<line x1="8" x2="80" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="var(--zero)" stroke-width="1.5"/>';
+  return g+'</svg>';
+}
+function miniLine(v){
+  const X=n=>30+(n+5)*30; let g='<svg width="100%" style="max-width:360px" viewBox="0 0 360 82" role="img" aria-label="Zahlengerade mit Pfeil">';
+  g+='<line x1="18" x2="344" y1="52" y2="52" stroke="var(--ink)" stroke-width="2.5"/><polygon points="352,52 342,46 342,58" fill="var(--ink)"/>';
+  for(let n=-5;n<=5;n++){ g+='<line x1="'+X(n)+'" x2="'+X(n)+'" y1="'+(n===0?42:45)+'" y2="'+(n===0?62:59)+'" stroke="var(--'+(n===0?'zero':'ink')+')" stroke-width="'+(n===0?3:1.8)+'"/>'; if(n===0||n===5||n===-5) g+='<text x="'+X(n)+'" y="78" text-anchor="middle" style="font:700 13px var(--display)" class="'+sc(n)+'">'+fmt(n)+'</text>'; }
+  g+='<path d="M'+X(v)+',40 l-8,-12 h5 v-16 h6 v16 h5 z" fill="var(--p3)"/>';
+  return g+'</svg>';
+}
+
+const LEVELS=[
+ {name:'Grundniveau', dots:1, desc:'Starte hier: Minuszahlen im Alltag erkennen und aufschreiben.', tasks:[
+  {type:'mc', viz:miniThermo(-6), q:'Welche Temperatur zeigt das Thermometer?', opts:['6 °C','−6 °C','−4 °C'], ans:1, hint:'Die Flüssigkeit endet unter der 0. Zähle die Striche von 0 nach unten. Unter null schreibt man ein Minus.', ex:'Die Anzeige ist 6 Striche unter der 0. Also: −6 °C.'},
+  {type:'num', q:'Schreibe als Zahl: <b>5 Grad unter null</b>.', unit:'°C', ans:-5, hint:'Unter null heißt: negativ. Schreibe ein Minus vor die Zahl.', ex:'5 Grad unter null = −5 °C.'},
+  {type:'num', q:'Du bist im Erdgeschoss. Das ist Stockwerk 0. Du fährst 2 Stockwerke nach unten. In welchem Stockwerk bist du jetzt?', unit:'', ans:-2, hint:'Unter dem Erdgeschoss haben die Stockwerke ein Minus: −1, −2, −3 …', ex:'0, dann −1, dann −2. Du bist auf Ebene −2.'},
+  {type:'mc', q:'Du hast 10 € Schulden. Welcher Kontostand passt?', opts:['10,00 €','−10,00 €','0,00 €'], ans:1, hint:'Schulden heißt: Es fehlt Geld. Das schreibt man mit Minus.', ex:'10 € Schulden = −10,00 €.'},
+  {type:'num', viz:miniLine(-3), q:'Welche Zahl zeigt der Pfeil?', unit:'', ans:-3, hint:'Starte bei 0. Zähle die Striche nach links. Links von 0 haben die Zahlen ein Minus.', ex:'Der Pfeil ist 3 Striche links von 0. Das ist −3.'},
+  {type:'mc', q:'Welche Zahl liegt auf der Zahlengerade weiter links?', opts:['−1','−5'], ans:1, hint:'Je weiter eine negative Zahl von 0 weg ist, desto weiter links liegt sie.', ex:'−5 ist weiter von 0 weg als −1. Also liegt −5 weiter links.'},
+ ]},
+ {name:'Regelniveau', dots:2, desc:'Zahlen ordnen und vergleichen, Gegenzahl und Betrag, Zunahme und Abnahme.', tasks:[
+  {type:'order', q:'Ordne die Zahlen der Größe nach. Beginne mit der kleinsten Zahl. Tippe die Zahlen nacheinander an.', nums:[3,-7,0,-2,5], hint:'Die kleinste Zahl liegt auf der Zahlengerade ganz links. Das ist die negative Zahl, die am weitesten von 0 weg ist.', ex:'−7 < −2 < 0 < 3 < 5'},
+  {type:'num', q:'Morgens sind es −4 °C. Bis mittags steigt die Temperatur um 7 Grad. Wie warm ist es mittags?', unit:'°C', ans:3, hint:'Steigen heißt: auf dem Thermometer nach oben. Von −4 bis 0 sind es 4 Grad. Wie viele Grad fehlen noch?', ex:'Von −4 bis 0 sind es 4 Grad. Dann noch 3 Grad weiter: 3 °C.'},
+  {type:'mc', q:'Welches Zeichen passt? <span class="big-inline">−6 ☐ −2</span>', opts:['<','>','='], ans:0, hint:'Die Zahl weiter links auf der Zahlengerade ist kleiner. Liegt −6 links oder rechts von −2?', ex:'−6 liegt weiter links. Also gilt −6 < −2.'},
+  {type:'num', q:'Wie heißt die Gegenzahl von <b>−8,5</b>?', unit:'', ans:8.5, hint:'Die Gegenzahl hat den gleichen Abstand zur 0. Sie liegt auf der anderen Seite. Das Vorzeichen wechselt.', ex:'Die Gegenzahl von −8,5 ist 8,5.'},
+  {type:'num', q:'Bestimme den Betrag: <span class="big-inline">|−12| = ?</span>', unit:'', ans:12, hint:'Der Betrag ist der Abstand zur 0. Ein Abstand ist nie negativ.', ex:'−12 ist 12 Schritte von 0 entfernt. |−12| = 12.'},
+  {type:'mc', q:'Welche Zahl liegt genau in der Mitte zwischen −3 und −2?', opts:['−2,5','−3,5','2,5'], ans:0, hint:'Zeichne eine Zahlengerade. Zwischen −3 und −2 liegen Kommazahlen mit Minus.', ex:'−2,5 liegt genau in der Mitte zwischen −3 und −2.'}
+ ]},
+ {name:'Erweiterung', dots:3, desc:'Kommazahlen ordnen, Unterschiede berechnen, Aussagen prüfen.', tasks:[
+  {type:'order', q:'Ordne die Zahlen der Größe nach. Beginne mit der kleinsten Zahl.', nums:[-1.5,-0.75,0.5,-2,-1.05], hint:'Vergleiche zuerst die Zahl vor dem Komma. Bei negativen Zahlen gilt: Weiter weg von 0 heißt kleiner. −1,5 ist weiter weg von 0 als −1,05.', ex:'−2 < −1,5 < −1,05 < −0,75 < 0,5'},
+  {type:'set', q:'Welche ganzen Zahlen liegen zwischen −3,5 und 1,2? Schreibe alle auf. Trenne mit Semikolon ( ; ).', ans:[-3,-2,-1,0,1], hint:'Zeichne eine Zahlengerade von −4 bis 2. Markiere −3,5 und 1,2. Zähle alle ganzen Zahlen dazwischen. Vergiss die 0 nicht.', ex:'−3; −2; −1; 0; 1'},
+  {type:'num', q:'Am Tag sind es 6 °C. In der Nacht sind es −9 °C. Wie groß ist der Temperaturunterschied?', unit:'Grad', ans:15, hint:'Von −9 bis 0 sind es 9 Grad. Von 0 bis 6 sind es 6 Grad.', ex:'9 + 6 = 15. Der Unterschied ist 15 Grad.'},
+  {type:'set', q:'Zwei Zahlen haben den Betrag 4,5. Welche? Trenne mit Semikolon ( ; ).', ans:[4.5,-4.5], hint:'Der Betrag ist der Abstand zur 0. Gehe von 0 aus 4,5 nach rechts. Und 4,5 nach links.', ex:'4,5 und −4,5 haben beide den Abstand 4,5 zur 0.'},
+  {type:'mc', q:'Mira sagt: „−10 ist größer als −2, weil 10 größer ist als 2.“ Hat sie recht?', opts:['Ja, sie hat recht.','Nein. −10 ist kleiner als −2.'], ans:1, hint:'Denk an das Thermometer: Ist −10 °C wärmer oder kälter als −2 °C?', ex:'−10 °C ist kälter als −2 °C. −10 liegt weiter links. Also gilt −10 < −2.'},
+  {type:'num', q:'Eine Wanderin steht auf einem Hügel in 350 m Höhe. Ein U-Boot ist bei −25 m. Wie groß ist der Höhenunterschied?', unit:'m', ans:375, hint:'Vom U-Boot bis zum Meeresspiegel sind es 25 m. Vom Meeresspiegel bis zum Hügel sind es 350 m.', ex:'25 m + 350 m = 375 m.'}
+ ]}
+];
+
+const UI={};
+(function(){
+  const levelsEl=$('#levels'), descEl=$('#level-desc'), lists=$('#task-lists'), pfill=$('#pfill'), ptext=$('#ptext');
+  let curL=0;
+  levelsEl.innerHTML=LEVELS.map((L,i)=>'<button class="lvl" type="button" role="tab" id="lvl-'+i+'" aria-controls="tl-'+i+'" aria-selected="'+(i===0)+'"><span class="dots" aria-hidden="true">'+[1,2,3].map(d=>'<i class="'+(d<=L.dots?'f':'')+'"></i>').join('')+'</span>'+L.name+'</button>').join('');
+  function taskHTML(t,i,j){
+    const id='t'+i+'-'+j;
+    let ans='';
+    if(t.type==='mc') ans='<div class="opts" role="group" aria-label="Antworten">'+t.opts.map((o,k)=>'<button class="opt" type="button" data-k="'+k+'" aria-pressed="false">'+o+'</button>').join('')+'</div>';
+    if(t.type==='num') ans='<span class="num-in"><label class="sr" for="'+id+'-in">Deine Antwort</label><button class="sign-btn" type="button" data-for="'+id+'-in" aria-label="Minuszeichen setzen oder entfernen">±</button><input id="'+id+'-in" type="text" autocomplete="off" placeholder="Antwort">'+(t.unit?'<span class="unit">'+t.unit+'</span>':'')+'</span>';
+    if(t.type==='set') ans='<span class="num-in"><label class="sr" for="'+id+'-in">Deine Antwort</label><input id="'+id+'-in" type="text" autocomplete="off" placeholder="z. B. −1; 2" style="width:14em"></span>';
+    if(t.type==='order') ans='<div class="order-pool">'+t.nums.map((n,k)=>'<button class="ochip '+sc(n)+'" type="button" data-k="'+k+'">'+fmt(n)+'</button>').join('')+'</div><div class="order-ans" aria-label="Deine Reihenfolge"></div><div><button class="btn btn-ghost btn-sm o-reset" type="button">Zurücksetzen</button></div>';
+    const done=P.ex[i*6+j].s;
+    return '<li class="task'+(done?' solved':'')+'" id="'+id+'" data-l="'+i+'" data-j="'+j+'"><div class="task-head"><span class="task-no">Aufgabe '+(j+1)+'</span><span class="task-state">'+(done?'✓ gelöst':'')+'</span></div>'+
+      '<div class="task-q">'+(t.viz?'<div class="q-viz">'+t.viz+'</div>':'')+'<p>'+t.q+'</p></div>'+
+      '<div class="task-ans">'+ans+'</div>'+
+      '<div class="task-actions"><button class="btn btn-sm t-check" type="button">Prüfen</button><button class="btn-hint" type="button" aria-expanded="false" aria-controls="'+id+'-h">Hilfekarte</button></div>'+
+      '<div class="hint" id="'+id+'-h" hidden><span class="box-lbl">Hilfekarte</span>'+t.hint+'</div>'+
+      '<p class="fb'+(done?' ok':'')+'" aria-live="polite">'+(done?'Diese Aufgabe hast du schon gelöst.':'')+'</p></li>';
+  }
+  function build(){ lists.innerHTML=LEVELS.map((L,i)=>'<ol class="tasks" id="tl-'+i+'" role="tabpanel" aria-labelledby="lvl-'+i+'"'+(i!==curL?' hidden':'')+'>'+L.tasks.map((t,j)=>taskHTML(t,i,j)).join('')+'</ol>').join(''); progress(); }
+  function progress(){
+    const n=LEVELS[curL].tasks.length; let s=0; for(let j=0;j<n;j++) if(P.ex[curL*6+j].s) s++;
+    pfill.style.width=(100*s/n)+'%'; ptext.textContent=s+' von '+n+' Aufgaben gelöst'; descEl.textContent=LEVELS[curL].desc;
+    const nd=$('#nudge');
+    if(curL<2&&s>=5){ nd.hidden=false; $('#nudge-t').textContent=(s===6?'Alles gelöst!':'Stark, 5 von 6 gelöst!')+' Mach im nächsten Niveau weiter.'; $('#nudge-b').textContent='Weiter zum '+LEVELS[curL+1].name+' →'; }
+    else if(curL===2&&s===6){ nd.hidden=false; $('#nudge-t').textContent='Du hast alle Aufgaben gelöst. Weiter zur Sicherung.'; $('#nudge-b').textContent='Zur Sicherung →'; }
+    else nd.hidden=true;
+  }
+  $('#nudge-b').addEventListener('click',()=>{ if(curL<2){ selectLevel(curL+1); document.getElementById('ueben').scrollIntoView({behavior:reduceMotion?'auto':'smooth'}); } else document.getElementById('merken').scrollIntoView({behavior:reduceMotion?'auto':'smooth'}); });
+  function selectLevel(i){ curL=i; $$('.lvl',levelsEl).forEach((b,k)=>b.setAttribute('aria-selected',String(k===i))); $$('.tasks',lists).forEach((l,k)=>l.hidden=k!==i); progress(); }
+  levelsEl.addEventListener('click',e=>{ const b=e.target.closest('.lvl'); if(b) selectLevel(Number(b.id.split('-')[1])); });
+  function orderState(li){ return $$('.order-ans .ochip',li).map(b=>Number(b.dataset.k)); }
+  function check(li){
+    const i=Number(li.dataset.l), j=Number(li.dataset.j), t=LEVELS[i].tasks[j], fb=$('.fb',li);
+    let ok=false, msg='';
+    if(t.type==='mc'){ const sel=$('.opt[aria-pressed="true"]',li); if(!sel){ fb.className='fb bad'; fb.textContent='Wähle zuerst eine Antwort.'; return; } ok=Number(sel.dataset.k)===t.ans; }
+    if(t.type==='num'){ const v=parseNum($('input',li).value); if(isNaN(v)){ fb.className='fb bad'; fb.textContent='Gib eine Zahl ein, zum Beispiel −3 oder 2,5.'; return; } ok=eq(v,t.ans); if(!ok&&eq(Math.abs(v),Math.abs(t.ans))){ msg='Fast! Prüfe das Vorzeichen.'; markSign('a-'+i+'-'+j); } }
+    const E=P.ex[i*6+j];
+    if(t.type==='set'){ const vs=parseList($('input',li).value); if(!vs.length||vs.some(isNaN)){ fb.className='fb bad'; fb.textContent='Schreibe Zahlen und trenne sie mit Semikolon, zum Beispiel: −1; 2'; return; } const a=[...new Set(vs)].sort((x,y)=>x-y), b=[...t.ans].sort((x,y)=>x-y); ok=a.length===b.length&&a.every((x,k)=>eq(x,b[k])); if(!ok&&a.length<b.length&&a.every(x=>b.some(y=>eq(x,y)))) msg='Gut, aber es fehlen noch Zahlen.'; }
+    if(t.type==='order'){ const st=orderState(li); if(st.length<t.nums.length){ fb.className='fb bad'; fb.textContent='Tippe zuerst alle Zahlen an.'; return; } const vals=st.map(k=>t.nums[k]); ok=vals.every((v,k)=>k===0||vals[k-1]<v); }
+    if(ok){ fb.className='fb ok'; fb.innerHTML='<strong>Richtig!</strong> '+t.ex; li.classList.add('solved'); $('.task-state',li).textContent='✓ gelöst'; if(!E.s){ E.s=1; saveP(); } progress(); }
+    else { if(!E.s&&P.name){ E.w++; saveP(); } fb.className='fb bad'; fb.textContent=(msg||'Noch nicht richtig.')+' Schau dir die Hilfekarte an und versuche es noch einmal.'; }
+  }
+  lists.addEventListener('click',e=>{
+    const li=e.target.closest('.task'); if(!li) return;
+    const opt=e.target.closest('.opt'); if(opt){ $$('.opt',li).forEach(o=>o.setAttribute('aria-pressed',String(o===opt))); return; }
+    const oc=e.target.closest('.ochip'); if(oc){ const pool=$('.order-pool',li), ans=$('.order-ans',li); (oc.parentElement===pool?ans:pool).appendChild(oc); return; }
+    if(e.target.closest('.o-reset')){ const pool=$('.order-pool',li); $$('.ochip',li).sort((a,b)=>a.dataset.k-b.dataset.k).forEach(c=>pool.appendChild(c)); $('.fb',li).textContent=''; return; }
+    if(e.target.closest('.t-check')){ check(li); return; }
+    const h=e.target.closest('.btn-hint'); if(h){ const box=document.getElementById(h.getAttribute('aria-controls')); const open=h.getAttribute('aria-expanded')==='true'; const E=P.ex[Number(li.dataset.l)*6+Number(li.dataset.j)]; if(!open&&!E.s&&!E.h&&P.name){ E.h=1; saveP(); } h.setAttribute('aria-expanded',String(!open)); box.hidden=open; h.textContent=open?'Hilfekarte':'Hilfekarte ausblenden'; }
+  });
+  lists.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.matches('input')){ e.preventDefault(); check(e.target.closest('.task')); } });
+  UI.buildTasks=build;
+  build(); selectLevel(0);
+})();
+
+/* ---------- Ich kann ---------- */
+(function(){
+  const CANS=[
+    ['Ich kann Zahlen mit Minus im Alltag finden und erklären.','#einstieg','Zum Einstieg'],
+    ['Ich kann Temperaturen ablesen, auch unter null.','#thermometer','Zum Thermometer'],
+    ['Ich kann im Fahrstuhl-Modell Zunahme und Abnahme zeigen.','#fahrstuhl','Zum Fahrstuhl'],
+    ['Ich kann Guthaben und Schulden als Zahl schreiben.','#konto','Zum Konto'],
+    ['Ich kann Zahlen auf der Zahlengerade eintragen.','#zahlengerade','Zur Zahlengerade'],
+    ['Ich kann rationale Zahlen der Größe nach ordnen.','#zahlengerade','Zur Zahlengerade'],
+    ['Ich kann die Gegenzahl und den Betrag einer Zahl angeben.','#zahlengerade','Zur Zahlengerade']
+  ];
+  const ul=$('#cans');
+  function build(){
+    ul.innerHTML=CANS.map((c,i)=>{ const v=P.cans[i]; return '<li class="can" data-i="'+i+'"><p>'+c[0]+'</p><div class="can-btns" role="group" aria-label="Selbsteinschätzung"><button class="can-btn yes" type="button" aria-pressed="'+(v===1)+'">Das kann ich</button><button class="can-btn no" type="button" aria-pressed="'+(v===2)+'">Noch unsicher</button></div><a class="back" href="'+c[1]+'"'+(v===2?'':' hidden')+'>'+c[2]+' →</a></li>'; }).join('');
+  }
+  ul.addEventListener('click',e=>{ const b=e.target.closest('.can-btn'); if(!b) return; const li=b.closest('.can'); $$('.can-btn',li).forEach(x=>x.setAttribute('aria-pressed',String(x===b))); $('.back',li).hidden=!b.classList.contains('no'); P.cans[Number(li.dataset.i)]=b.classList.contains('yes')?1:2; saveP(); });
+  UI.buildCans=build;
+  build();
+})();
+
+/* ---------- Anmelden, Abmelden, Ergebnis-Code ---------- */
+(function(){
+  const login=$('#login'), form=$('#login-form'), inp=$('#login-name'), err=$('#login-err');
+  const me=$('#me'), meAv=$('#me-av'), meName=$('#me-name');
+  const rcName=$('#rc-name'), rcCode=$('#rc-code'), rcStats=$('#rc-stats'), rcWarn=$('#rc-warn');
+  const NAME_RE=/^(\p{L}[\p{L}'’-]*)(\s+\p{L}[\p{L}'’-]*)*\s+(\p{L})\.?$/u;
+  function tidy(raw){
+    const s=String(raw||'').trim().replace(/\s+/g,' ');
+    if(!NAME_RE.test(s)) return null;
+    const parts=s.replace(/\.$/,'').split(' ');
+    const ini=parts.pop();
+    const first=parts.map(w=>w.split('-').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join('-')).join(' ');
+    return first+' '+ini.toUpperCase()+'.';
+  }
+  function counts(){
+    const lv=[0,0,0], first=[0,0,0]; P.ex.forEach((e,k)=>{ if(e.s){ lv[Math.floor(k/6)]++; if(exStatus(e)===3) first[Math.floor(k/6)]++; } });
+    const models=MK.map((k,i)=>Math.min(RZ.MODELS[i].n,P.mini[k].length));
+    const done=models.filter((c,i)=>c>=RZ.MODELS[i].n).length;
+    const cans=P.cans.filter(v=>v>0).length;
+    const attempted=P.ex.filter(e=>e.s||e.w>0).length;
+    return {lv:lv, first:first, models:models, done:done, cans:cans, attempted:attempted};
+  }
+  function plan(c){
+    const m14=c.models.slice(0,4).reduce((a,b)=>a+b,0), m56=c.models.slice(4).reduce((a,b)=>a+b,0);
+    const solved=c.lv[0]+c.lv[1]+c.lv[2], intro=P.intro.length;
+    const st=(v,n)=>v>=n?'done':(v>0?'part':'');
+    const steps=[
+      {h:1,t:'Einstieg: Situationskarten',min:5,href:'#situationen',s:intro+' von 4 Karten aufgedeckt',c:st(intro,4)},
+      {h:1,t:'Modelle 1–4: Thermometer, Fahrstuhl, Konto, Meeresspiegel',min:40,href:'#thermometer',s:m14+' von 12 Mini-Aufgaben',c:st(m14,12)},
+      {h:2,t:'Modelle 5–6: Plättchen, Zahlengerade',min:15,href:'#plaettchen',s:m56+' von 6 Mini-Aufgaben',c:st(m56,6)},
+      {h:2,t:'Übung: Grund → Regel → Erweiterung',min:20,href:'#ueben',s:solved+' von 18 Aufgaben gelöst',c:solved>=18?'done':(c.attempted>0?'part':'')},
+      {h:2,t:'Sicherung: Heft, „Ich kann …“, Code',min:10,href:'#merken',s:'„Ich kann …“: '+c.cans+' von 7',c:st(c.cans,7)}
+    ];
+    let nextSet=false;
+    const row=x=>{ let cls=x.c; if(!nextSet&&x.c!=='done'){ cls+=' next'; nextSet=true; } return '<a class="step '+cls+'" href="'+x.href+'"><span class="step-ic" aria-hidden="true">'+(x.c==='done'?'✓':'')+'</span><span class="step-t">'+x.t+'</span><span class="step-min">'+x.min+' Min.</span><span class="step-s">'+(x.c==='done'?'Erledigt · ':'')+x.s+'</span></a>'; };
+    const col=(h,title)=>'<div class="plan-col"><h3>'+title+'<span>45 Minuten</span></h3>'+steps.filter(x=>x.h===h).map(row).join('')+'</div>';
+    const html=col(1,'1. Stunde'); $('#plan').innerHTML=html+col(2,'2. Stunde');
+  }
+  function render(){
+    const c=counts();
+    MK.forEach((k,i)=>{ const el=$('.mi-prog[data-mk="'+k+'"]'); if(!el) return; const n=RZ.MODELS[i].n, m=c.models[i]; el.textContent=m>=n?'✓ fertig':(m+' von '+n+' Mini-Aufgaben'); el.classList.toggle('done',m>=n); });
+    plan(c);
+    if(P.name){
+      me.hidden=false; meName.textContent=P.name; meAv.textContent=P.name.charAt(0).toUpperCase();
+      rcName.textContent=P.name;
+      rcCode.textContent=RZ.encode(P.name,{status:P.ex.map(exStatus),cans:P.cans,models:c.models,sign:P.signIds.length});
+      rcCode.classList.remove('empty');
+    } else {
+      me.hidden=true; rcName.textContent='Nicht angemeldet'; rcCode.textContent='–––––-–––––-–––––'; rcCode.classList.add('empty');
+    }
+    const f=c.first[0]+c.first[1]+c.first[2];
+    rcStats.innerHTML=
+      '<li><span>Grundniveau gelöst</span><b>'+c.lv[0]+' von 6</b></li>'+
+      '<li><span>Regelniveau gelöst</span><b>'+c.lv[1]+' von 6</b></li>'+
+      '<li><span>Erweiterung gelöst</span><b>'+c.lv[2]+' von 6</b></li>'+
+      '<li><span>davon auf Anhieb</span><b>'+f+'</b></li>'+
+      '<li><span>Mini-Aufgaben</span><b>'+c.models.reduce((a,b)=>a+b,0)+' von 18</b></li>'+
+      '<li><span>„Ich kann …“ ausgefüllt</span><b>'+c.cans+' von 7</b></li>';
+    rcWarn.hidden=store.ok;
+  }
+  function showLogin(){ login.hidden=false; inp.value=''; err.textContent=''; setTimeout(()=>inp.focus(),30); }
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=tidy(inp.value);
+    if(!name){ err.textContent='Schreibe deinen Vornamen und den ersten Buchstaben deines Nachnamens. Beispiel: Max M.'; return; }
+    loadP(name); lsSet('rz2:current',name);
+    login.hidden=true; UI.buildTasks(); UI.buildCans(); render();
+    document.dispatchEvent(new CustomEvent('rz:progress'));
+  });
+  document.addEventListener('rz:progress',render);
+  const ask=$('#logout-ask'), conf=$('#logout-confirm');
+  ask.addEventListener('click',()=>{ ask.hidden=true; conf.hidden=false; });
+  $('#logout-no').addEventListener('click',()=>{ conf.hidden=true; ask.hidden=false; });
+  $('#logout-yes').addEventListener('click',()=>{
+    conf.hidden=true; ask.hidden=false;
+    lsSet('rz2:current',''); P=blankP();
+    UI.buildTasks(); UI.buildCans(); render();
+    window.scrollTo(0,0); showLogin();
+  });
+  render();
+  if(!P.name) showLogin();
+})();
+
+/* ---------- Wortspeicher ---------- */
+(function(){
+  const panel=$('#words'), bd=$('#words-bd'); let last=null;
+  function open(){ last=document.activeElement; panel.hidden=false; bd.hidden=false; $('#words-close').focus(); }
+  function close(){ panel.hidden=true; bd.hidden=true; if(last&&last.focus) last.focus(); }
+  $('#words-open').addEventListener('click',open); $('#words-open-2').addEventListener('click',open);
+  $('#words-close').addEventListener('click',close); bd.addEventListener('click',close);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!panel.hidden) close(); });
+})();
+
+/* ---------- Navigation ---------- */
+(function(){
+  const links=$$('.ph'); const map={}; links.forEach(a=>map[a.getAttribute('href').slice(1)]=a);
+  if(!('IntersectionObserver' in window)) return;
+  const io=new IntersectionObserver(es=>{ es.forEach(en=>{ if(en.isIntersecting){ links.forEach(l=>l.classList.remove('active')); const a=map[en.target.id]; if(a){ a.classList.add('active'); } } }); },{rootMargin:'-40% 0px -55% 0px'});
+  ['einstieg','modelle','ueben','merken'].forEach(id=>{ const s=document.getElementById(id); if(s) io.observe(s); });
+  links[0].classList.add('active');
+})();
+})();
+</script>
+</body>
+</html>
